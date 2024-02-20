@@ -23,7 +23,9 @@ pipeline {
     }
    stage('generate SBOM') {
             steps {
-                sh'ls -l '
+                sh'ls -lr module-ejb/target/'
+                sh'ls -lr module-web/target/'
+                sh'ls -lr module-ear/target/'
                  /*sh 'mvn org.cyclonedx:cyclonedx-maven-plugin:makeBom'
                  sh'cat target/CycloneDX-Sbom.xml'*/
                 
