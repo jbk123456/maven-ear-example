@@ -30,6 +30,10 @@ pipeline {
                 //sh(script: "awk -F'[<>]' '/<module>/{print $3}' pom.xml", returnStdout: true).trim()
                 sh """
                 grep -oP "<module>\\K.*?(?=</module>)" pom.xml
+                for module in $modules; do
+                  echo "hamdi ${module} "
+                  ind -type d -path "${module}/target" -exec sh -c 'find "$0" -type f -name "${module}*" -exec cp -t dest {} +' {} \;
+                done
                 touch listing.txt
                 cat test.log | tee -a listing.txt
                 
