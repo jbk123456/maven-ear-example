@@ -22,4 +22,4 @@ spec:
       ".+\\.properties": ISO-8859-1
     targetPathShared: "true"
     createTargetPath: "true"
-    file: !file "../application-ejb-@version@.ear"
+    file: !file "../application-ejb-@version@.jar"
