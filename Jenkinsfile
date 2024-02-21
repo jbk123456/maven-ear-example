@@ -32,8 +32,9 @@ pipeline {
                   dest="target" 
                   version="1.0-SNAPSHOT"
                   archiveType="ear"
-                  grep '\\.${archiveType}"$' applications.yaml
-                  deployables=$(grep '\\.${archiveType}"$' applications.yaml | sed 's/.*\\/\\([^/]*\\)\\.${archiveType}".*/\\1/')
+
+                  
+                  deployables=$(grep '\\.$archiveType"$' applications.yaml | sed 's/.*\\/\\([^/]*\\)\\.$archiveType.*/\\1/')
                   deployablesWithversion=$(echo "$deployables" | sed "s/@version@/$version/")
                   echo " ${deployablesWithversion}"
                   for file in $deployablesWithversion; do
