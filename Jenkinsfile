@@ -30,7 +30,9 @@ pipeline {
                 //tring modules =sh(script: '''grep -oP "<module>\\K.*?(?=</module>)" pom.xml''', returnStdout: true)
                 
                 //modules= $(grep -oP "<module>\\K.*?(?=</module>)" pom.xml)
+                
                 sh '''
+                mkdir target
                 grep -oP "<module>\\K.*?(?=</module>)" pom.xml
                 modules=$(grep -oP "<module>\\K.*?(?=</module>)" pom.xml)
                 echo " ${modules} "

@@ -9,13 +9,13 @@
       <version>1.0-SNAPSHOT</version>
    </parent>
 
-   <artifactId>module-web</artifactId>
+   <artifactId>application-web</artifactId>
    <packaging>war</packaging>
 
    <dependencies>
       <dependency>
          <groupId>com.example</groupId>
-         <artifactId>module-ejb</artifactId>
+         <artifactId>application-ejb</artifactId>
          <type>ejb</type>
          <scope>provided</scope>
       </dependency>
