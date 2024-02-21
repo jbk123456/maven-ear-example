@@ -1,0 +1,25 @@
+---
+apiVersion: xl-deploy/v1
+kind: Applications
+spec:
+- name: Applications/EXAMPLE/Modul/@tmpVersion@
+  type: udm.DeploymentPackage
+  deployables:
+  - name: application-ear
+    type: jee.Ear
+    tags:
+    - application
+    scanPlaceholders: true
+    textFileNamesRegex: .+\.(properties|xml)
+    fileEncodings:
+      ".+\\.properties": ISO-8859-1
+    file: !file "../application.ear"
+  - name: application-config
+    type: file.Folder
+    tags:
+    - application
+    fileEncodings:
+      ".+\\.properties": ISO-8859-1
+    targetPathShared: "true"
+    createTargetPath: "true"
+    file: !file "../application-config-@version@.jar"
