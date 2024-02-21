@@ -29,7 +29,7 @@ pipeline {
                 
                 //sh(script: "awk -F'[<>]' '/<module>/{print $3}' pom.xml", returnStdout: true).trim()
                 sh """
-                grep -oP "<module>\\K.*?(?=</module>)" pom.xml
+                modules=$(grep -oP "<module>\\K.*?(?=</module>)" pom.xml)
                 for module in $modules; do
                   echo "hamdi ${module} "
                   
