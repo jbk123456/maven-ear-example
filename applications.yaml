@@ -13,8 +13,8 @@ spec:
     textFileNamesRegex: .+\.(properties|xml)
     fileEncodings:
       ".+\\.properties": ISO-8859-1
-    file: !file "../application.ear"
-  - name: application-config
+    file: !file "../application-ear.ear"
+  - name: application-ejb
     type: file.Folder
     tags:
     - application
@@ -22,4 +22,4 @@ spec:
       ".+\\.properties": ISO-8859-1
     targetPathShared: "true"
     createTargetPath: "true"
-    file: !file "../application-config-@version@.jar"
+    file: !file "../application-ejb-@version@.jar"

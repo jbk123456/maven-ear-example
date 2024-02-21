@@ -27,10 +27,6 @@ pipeline {
                 sh'ls -lr module-ejb/target/'
                 sh'ls -lr module-web/target/'
                 
-                //tring modules =sh(script: '''grep -oP "<module>\\K.*?(?=</module>)" pom.xml''', returnStdout: true)
-                
-                //modules= $(grep -oP "<module>\\K.*?(?=</module>)" pom.xml)
-                
                 sh '''
                 mkdir target
                 grep -oP "<module>\\K.*?(?=</module>)" pom.xml
@@ -47,7 +43,7 @@ pipeline {
                 cat test.log | tee -a listing.txt
                 
 
-                grep -m 1 "Creating CI Applications/*" listing.txt | grep -oP 'Applications/[^/]+/[^/]+' 
+                grep -m 1 "Creating CI Applications/*" listing.txt | grep -oP "Applications/[^/]+/[^/]+"
                 
 
                 '''
