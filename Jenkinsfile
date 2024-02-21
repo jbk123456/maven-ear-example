@@ -31,6 +31,7 @@ pipeline {
                 sh """
                 touch listing.txt
                 cat test.log | tee -a listing.txt
+                grep -o '<module>[^<]*</module>' pom.xml | sed 's/<module>\(.*\)<\/module>/\1/'
 
                 grep -m 1 "Creating CI Applications/*" listing.txt | grep -oP 'Applications/[^/]+/[^/]+' 
                 
