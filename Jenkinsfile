@@ -27,13 +27,26 @@ pipeline {
 
                 
                 sh '''
-                version="1.0-SNAPSHOT"
-                grep '\\.ear"$' applications.yaml
-                deployables=$(grep '\\.ear"$' applications.yaml | sed 's/.*\\/\\([^/]*\\)\\.ear".*/\\1/')
-                nouvelle_chaine=$(echo "$deployables" | sed "s/@version@/$version/")
-                echo " ${nouvelle_chaine}"
+                  mkdir target
+                  dest= "target" 
+                  version="1.0-SNAPSHOT"
+                  grep '\\.ear"$' applications.yaml
+                  deployables=$(grep '\\.ear"$' applications.yaml | sed 's/.*\\/\\([^/]*\\)\\.ear".*/\\1/')
+                  deployablesWithversion=$(echo "$deployables" | sed "s/@version@/$version/")
+                  echo " ${deployablesWithversion}"
+                  fichiers_trouve=$(find  -name "deployablesWithversion")
+                  for module in $fichiers_trouve; do
+                    # Vérifier si le fichier a été trouvé
+                    if [ -z "$module" ]; then
+                        echo "Le fichier n'a pas été trouvé."
+                    else
+                        # Déplacer le fichier trouvé vers le dossier spécifié
+                        mv "$module" "$dest"
+                        echo "Le fichier a été déplacé avec succès."
+                    fi
+                  done
                 '''
-                sh '''
+                /*sh '''
                 mkdir target
                 grep -oP "<module>\\K.*?(?=</module>)" pom.xml
                 modules=$(grep -oP "<module>\\K.*?(?=</module>)" pom.xml)
@@ -56,7 +69,7 @@ pipeline {
                  grep -m 1 "Creating CI Applications/*" listing.txt | grep -oP "Applications/[^/]+/[^/]+"
                 
                  
-                 '''
+                 '''*/
                 
             }
         }
