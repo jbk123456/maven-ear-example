@@ -35,7 +35,7 @@ pipeline {
                   deployables=$(grep '\\.ear"$' applications.yaml | sed 's/.*\\/\\([^/]*\\)\\.ear".*/\\1/')
                   deployablesWithversion=$(echo "$deployables" | sed "s/@version@/$version/")
                   echo " ${deployablesWithversion}"
-                  fichiers_trouve=$(find  -name "deployablesWithversion")
+                  fichiers_trouve=$(find  -name "${deployablesWithversion}.ear")
                   for module in $fichiers_trouve; do
                     # Vérifier si le fichier a été trouvé
                     if [ -z "$module" ]; then
