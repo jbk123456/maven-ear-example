@@ -27,8 +27,9 @@ pipeline {
 
                 
                 sh '''
+                ls -l
                   mkdir target
-                  dest= "target" 
+                  dest="target" 
                   version="1.0-SNAPSHOT"
                   grep '\\.ear"$' applications.yaml
                   deployables=$(grep '\\.ear"$' applications.yaml | sed 's/.*\\/\\([^/]*\\)\\.ear".*/\\1/')
