@@ -27,10 +27,12 @@ pipeline {
                 sh'ls -lr module-ejb/target/'
                 sh'ls -lr module-web/target/'
                 
-                String modules =sh(script: '''grep -oP "<module>\\K.*?(?=</module>)" pom.xml''', returnStdout: true)
+                //tring modules =sh(script: '''grep -oP "<module>\\K.*?(?=</module>)" pom.xml''', returnStdout: true)
                 
                 //modules= $(grep -oP "<module>\\K.*?(?=</module>)" pom.xml)
                 sh """
+                grep -oP "<module>\\K.*?(?=</module>)" pom.xml
+                modules=$(grep -oP "<module>\\K.*?(?=</module>)" pom.xml)
                 echo " ${modules} "
                 for module in $modules; do
                   echo "hamdi ${module} "
