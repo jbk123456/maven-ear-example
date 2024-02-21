@@ -27,7 +27,7 @@ pipeline {
                 sh'ls -lr module-web/target/'
                 sh'ls -lr module-ear/target/'
                 sh """
-                grep "Creating CI Applications/*" test.log| grep -oP 'Applications/[.*]/[^/]+'
+                grep "Creating CI Applications/*" test.log| grep -oP 'Applications/*/[^/]+'
 
                 """
                  /*sh 'mvn org.cyclonedx:cyclonedx-maven-plugin:makeBom'
