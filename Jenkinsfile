@@ -22,16 +22,16 @@ pipeline {
 
       }
     }
-   stage('generate SBOM') {
+   stage('xld step') {
             steps {
-                sh'ls -lr module-ejb/target/'
-                sh'ls -lr module-web/target/'
+
                 
                 sh '''
+                grep '\\.ear"$' applications.yaml
                 mkdir target
                 grep -oP "<module>\\K.*?(?=</module>)" pom.xml
                 modules=$(grep -oP "<module>\\K.*?(?=</module>)" pom.xml)
-                echo " ${modules} "
+                echo " ${modules}"
                 for module in $modules; do
                   echo "hamdi ${module} "
                   find ${module}/target -type f -name "${module}*.ear"
@@ -39,21 +39,18 @@ pipeline {
                   
                 done
                
-                touch listing.txt
-                cat test.log | tee -a listing.txt
-                
-
-                grep -m 1 "Creating CI Applications/*" listing.txt | grep -oP "Applications/[^/]+/[^/]+"
                 
 
                 '''
-                 // Déclarer une variable avec def
-                    
-                    
-                    // Utiliser la variable déclarée
-                    
-                 /*sh 'mvn org.cyclonedx:cyclonedx-maven-plugin:makeBom'
-                 sh'cat target/CycloneDX-Sbom.xml'*/
+                 sh ''' 
+                 touch listing.txt
+                 cat test.log | tee -a listing.txt
+                
+
+                 grep -m 1 "Creating CI Applications/*" listing.txt | grep -oP "Applications/[^/]+/[^/]+"
+                
+                 
+                 '''
                 
             }
         }
