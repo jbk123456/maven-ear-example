@@ -30,7 +30,7 @@ pipeline {
                 //tring modules =sh(script: '''grep -oP "<module>\\K.*?(?=</module>)" pom.xml''', returnStdout: true)
                 
                 //modules= $(grep -oP "<module>\\K.*?(?=</module>)" pom.xml)
-                sh """
+                sh '''
                 grep -oP "<module>\\K.*?(?=</module>)" pom.xml
                 modules=$(grep -oP "<module>\\K.*?(?=</module>)" pom.xml)
                 echo " ${modules} "
@@ -46,7 +46,7 @@ pipeline {
                 grep -m 1 "Creating CI Applications/*" listing.txt | grep -oP 'Applications/[^/]+/[^/]+' 
                 
 
-                """
+                '''
                  // Déclarer une variable avec def
                     
                     
