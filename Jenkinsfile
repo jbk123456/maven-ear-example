@@ -29,8 +29,8 @@ pipeline {
                 sh """
                 
 
-                result=$(grep -m 1 "Creating CI Applications/*" test.log | grep -oP 'Applications/[^/]+/[^/]+')
-                echo "$result"
+                grep -m 1 "Creating CI Applications/*" test.log | grep -oP 'Applications/[^/]+/[^/]+'
+                
 
                 """
                  /*sh 'mvn org.cyclonedx:cyclonedx-maven-plugin:makeBom'

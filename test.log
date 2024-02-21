@@ -2,6 +2,8 @@ hhhhhh
 fichier.txt recherche la ligne contenant la chaîne spécifiée dans le fichier texte.
 grep -oP 'Applica
 Creating CI Applications/test/blabla/archive.ear
+Creating CI Applications/test/blabla/archive.ear
+Creating CI Applications/test/blabla/archive.ear
 tions/test/[^/]+' recherche la partie de la ligne correspondant à l'e
 xpression régulière 'Applications/test/[^/]+'. Dans cette expression,
  [^/]+ signifie tout caractère qui n'est pas un slash /, répété une ou plusieurs fois.
