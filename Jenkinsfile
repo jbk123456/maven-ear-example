@@ -32,7 +32,7 @@ pipeline {
                 touch listing.txt
                 cat test.log | tee -a listing.txt
 
-                grep -m 1 "Creating CI Applications/*" listing.txt | grep -oP 'Applications/[^/]+/[^/]+' >${reg}
+                grep -m 1 "Creating CI Applications/*" listing.txt | grep -oP 'Applications/[^/]+/[^/]+' 
                 
 
                 """
