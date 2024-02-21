@@ -34,7 +34,7 @@ pipeline {
                   archive="ear"
                   regex="\\.ear\"$"
 
-                  grep regex applications.yaml
+                  grep $regex applications.yaml
                   deployables=$(grep '\\.$archive"$' applications.yaml | sed 's/.*\\/\\([^/]*\\)\\.$archive".*/\\1/')
                   deployablesWithversion=$(echo "$deployables" | sed "s/@version@/$version/")
                   echo " ${deployablesWithversion}"
