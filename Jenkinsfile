@@ -26,7 +26,7 @@ pipeline {
                 sh'ls -lr module-ejb/target/'
                 sh'ls -lr module-web/target/'
                 sh'ls -lr module-ear/target/'
-                reg = ''
+                def reg = ''
                 sh """
                 
 
