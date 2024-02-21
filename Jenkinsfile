@@ -28,6 +28,9 @@ pipeline {
                 
                 sh '''
                 grep '\\.ear"$' applications.yaml
+                grep '\.ear"$' fichier.yaml | sed 's/.*\/\([^/]*\)\.ear".*/\1/'
+                '''
+                sh '''
                 mkdir target
                 grep -oP "<module>\\K.*?(?=</module>)" pom.xml
                 modules=$(grep -oP "<module>\\K.*?(?=</module>)" pom.xml)
