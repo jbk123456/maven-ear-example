@@ -31,7 +31,7 @@ pipeline {
                 grep '\\.ear"$' applications.yaml
                 deployables=$(grep '\\.ear"$' applications.yaml | sed 's/.*\\/\\([^/]*\\)\\.ear".*/\\1/')
                 nouvelle_chaine=$(echo "$deployables" | sed "s/@version@/$version/")
-                echo " ${modulesnouvelle_chaine}"
+                echo " ${nouvelle_chaine}"
                 '''
                 sh '''
                 mkdir target
