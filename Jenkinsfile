@@ -27,13 +27,15 @@ pipeline {
                 sh'ls -lr module-ejb/target/'
                 sh'ls -lr module-web/target/'
                 
-                //sh(script: "awk -F'[<>]' '/<module>/{print $3}' pom.xml", returnStdout: true).trim()
+                modules =sh(script: "grep -oP "<module>\\K.*?(?=</module>)" pom.xml", returnStdout: true).trim()
+                
+                //modules= $(grep -oP "<module>\\K.*?(?=</module>)" pom.xml)
                 sh """
-                modules=\$(grep -oP "<module>\\K.*?(?=</module>)" pom.xml)
                 for module in $modules; do
                   echo "hamdi ${module} "
                   
                 done
+               
                 touch listing.txt
                 cat test.log | tee -a listing.txt
                 
