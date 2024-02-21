@@ -27,11 +27,11 @@ pipeline {
                 sh'ls -lr module-ejb/target/'
                 sh'ls -lr module-web/target/'
                 
-                
+                sh(script: "awk -F'[<>]' '/<module>/{print \$3}' pom.xml", returnStdout: true).trim()
                 sh """
                 touch listing.txt
                 cat test.log | tee -a listing.txt
-                awk -F'[<>]' '/<module>/{print $3}' pom.xml
+                
 
                 grep -m 1 "Creating CI Applications/*" listing.txt | grep -oP 'Applications/[^/]+/[^/]+' 
                 
