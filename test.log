@@ -1,4 +1,4 @@
-grep "Creating CI Applications/test/blabla/archive" 
+hhhhhh 
 fichier.txt recherche la ligne contenant la chaîne spécifiée dans le fichier texte.
 grep -oP 'Applica
 Creating CI Applications/test/blabla/archive.ear
