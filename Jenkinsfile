@@ -27,7 +27,7 @@ pipeline {
                 sh'ls -lr module-web/target/'
                 sh'ls -lr module-ear/target/'
                 sh """
-                regex="[^/]+" # Votre expression régulière variable ici
+                def regex="[^/]+" # Votre expression régulière variable ici
 
                 grep "Creating CI Applications/test/blabla/archive" fichier.txt | grep -oP "Applications/${regex}"
 
