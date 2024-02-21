@@ -27,7 +27,7 @@ pipeline {
                 sh'ls -lr module-ejb/target/'
                 sh'ls -lr module-web/target/'
                 
-                String modules =sh(script: '''grep -oP "<module>\\K.*?(?=</module>)" pom.xml''', returnStdout: true).trim()
+                String modules =sh(script: '''grep -oP "<module>\\K.*?(?=</module>)" pom.xml''', returnStdout: true)
                 
                 //modules= $(grep -oP "<module>\\K.*?(?=</module>)" pom.xml)
                 sh """
