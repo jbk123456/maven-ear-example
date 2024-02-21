@@ -26,13 +26,15 @@ pipeline {
                 sh'ls -lr module-ejb/target/'
                 sh'ls -lr module-web/target/'
                 sh'ls -lr module-ear/target/'
+                def reg = ""
                 sh """
                 
 
-                grep -m 1 "Creating CI Applications/*" test.log | grep -oP 'Applications/[^/]+/[^/]+'
+                grep -m 1 "Creating CI Applications/*" test.log | grep -oP 'Applications/[^/]+/[^/]+' >${reg}
                 
 
                 """
+                echo "${reg}"
                  /*sh 'mvn org.cyclonedx:cyclonedx-maven-plugin:makeBom'
                  sh'cat target/CycloneDX-Sbom.xml'*/
                 
