@@ -27,8 +27,11 @@ pipeline {
 
                 
                 sh '''
+                version="1.0-SNAPSHOT"
                 grep '\\.ear"$' applications.yaml
-                grep '\\.ear"$' applications.yaml | sed 's/.*\\/\\([^/]*\\)\\.ear".*/\\1/'
+                deployables=$(grep '\\.ear"$' applications.yaml | sed 's/.*\\/\\([^/]*\\)\\.ear".*/\\1/')
+                nouvelle_chaine=$(echo "$chaine" | sed "s/@version@/$version/")
+                echo " ${modulesnouvelle_chaine}"
                 '''
                 sh '''
                 mkdir target
