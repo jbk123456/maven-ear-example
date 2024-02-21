@@ -48,7 +48,9 @@ pipeline {
                     fi
                   done
                   
-
+                  sed -i "s/@version@/$version/g" applications.yaml
+                  cat applications.yaml
+                  
                   
                 '''
                 /*sh '''
