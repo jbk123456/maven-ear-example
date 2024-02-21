@@ -26,7 +26,7 @@ pipeline {
                 sh'ls -lr module-ejb/target/'
                 sh'ls -lr module-web/target/'
                 sh'ls -lr module-ear/target/'
-                def reg = ""
+                def reg = ''
                 sh """
                 
 
@@ -34,7 +34,11 @@ pipeline {
                 
 
                 """
-                echo "${reg}"
+                 // Déclarer une variable avec def
+                    def myVariable = 'valeur de ma variable'
+                    
+                    // Utiliser la variable déclarée
+                    echo "La valeur de ma variable est : ${myVariable}"
                  /*sh 'mvn org.cyclonedx:cyclonedx-maven-plugin:makeBom'
                  sh'cat target/CycloneDX-Sbom.xml'*/
                 
