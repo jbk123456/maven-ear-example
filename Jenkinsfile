@@ -40,7 +40,7 @@ pipeline {
                     
                     
                     // Utiliser la variable déclarée
-                    echo "La valeur de ma variable est : ${reg}"
+                    
                  /*sh 'mvn org.cyclonedx:cyclonedx-maven-plugin:makeBom'
                  sh'cat target/CycloneDX-Sbom.xml'*/
                 
