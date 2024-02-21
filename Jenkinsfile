@@ -36,18 +36,19 @@ pipeline {
                   deployablesWithversion=$(echo "$deployables" | sed "s/@version@/$version/")
                   echo " ${deployablesWithversion}"
                   for file in $deployablesWithversion; do
-                    fichiers_trouve=$(find  -name "${file}.ear")
-                  done
-                  for module in $fichiers_trouve; do
+                    found=$(find  -name "${file}.ear")
                     # Vérifier si le fichier a été trouvé
-                    if [ -z "$module" ]; then
+                    if [ -z "$found" ]; then
                         echo "Le fichier n'a pas été trouvé."
                     else
                         # Déplacer le fichier trouvé vers le dossier spécifié
-                        mv "$module" "$dest"
+                        mv "$found" "$dest"
                         echo "Le fichier a été déplacé avec succès."
                     fi
                   done
+                  
+
+                  
                 '''
                 /*sh '''
                 mkdir target
