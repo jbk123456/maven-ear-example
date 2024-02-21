@@ -27,16 +27,17 @@ pipeline {
 
                 
                 sh '''
-                ls -l
+                
                   mkdir target
                   dest="target" 
                   version="1.0-SNAPSHOT"
-                  grep '\\.ear"$' applications.yaml
-                  deployables=$(grep '\\.ear"$' applications.yaml | sed 's/.*\\/\\([^/]*\\)\\.ear".*/\\1/')
+                  archiveType="ear"
+                  grep '\\.${archiveType}"$' applications.yaml
+                  deployables=$(grep '\\.${archiveType}"$' applications.yaml | sed 's/.*\\/\\([^/]*\\)\\.${archiveType}".*/\\1/')
                   deployablesWithversion=$(echo "$deployables" | sed "s/@version@/$version/")
                   echo " ${deployablesWithversion}"
                   for file in $deployablesWithversion; do
-                    found=$(find  -name "${file}.ear")
+                    found=$(find  -name "${file}.${archiveType}")
                     # Vérifier si le fichier a été trouvé
                     if [ -z "$found" ]; then
                         echo "Le fichier n'a pas été trouvé."
