@@ -27,9 +27,9 @@ pipeline {
                 sh'ls -lr module-web/target/'
                 sh'ls -lr module-ear/target/'
                 sh """
-                def regex="[^/]+" # Votre expression régulière variable ici
+                
 
-                grep "Creating CI Applications/test/blabla/archive" fichier.txt | grep -oP "Applications/${regex}"
+                grep "Creating CI Applications/test/blabla/archive" fichier.txt | grep -oP "Applications/[^/]+"
 
                 """
                  /*sh 'mvn org.cyclonedx:cyclonedx-maven-plugin:makeBom'
