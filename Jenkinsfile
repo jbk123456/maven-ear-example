@@ -28,7 +28,7 @@ pipeline {
                 
                 sh '''
                 grep '\\.ear"$' applications.yaml
-                grep '\\.ear"$' fichier.yaml | sed 's/.*\\/\\([^/]*\\)\\.ear".*/\\1/'
+                grep '\\.ear"$' applications.yaml | sed 's/.*\\/\\([^/]*\\)\\.ear".*/\\1/'
                 '''
                 sh '''
                 mkdir target
