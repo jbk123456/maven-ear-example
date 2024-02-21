@@ -27,11 +27,12 @@ pipeline {
                 sh'ls -lr module-ejb/target/'
                 sh'ls -lr module-web/target/'
                 sh'ls -lr module-ear/target/'
-                def reg = ''
-                sh """
                 
+                sh """
+                touch listing.txt
+                cat test.log | tee -a listing.txt
 
-                grep -m 1 "Creating CI Applications/*" test.log | grep -oP 'Applications/[^/]+/[^/]+' >${reg}
+                grep -m 1 "Creating CI Applications/*" listing.txt | grep -oP 'Applications/[^/]+/[^/]+' >${reg}
                 
 
                 """
