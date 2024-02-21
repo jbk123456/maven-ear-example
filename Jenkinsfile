@@ -27,8 +27,9 @@ pipeline {
                 sh'ls -lr module-ejb/target/'
                 sh'ls -lr module-web/target/'
                 
-                sh(script: "awk -F'[<>]' '/<module>/{print \$3}' pom.xml", returnStdout: true).trim()
+                //sh(script: "awk -F'[<>]' '/<module>/{print $3}' pom.xml", returnStdout: true).trim()
                 sh """
+                grep -oP '<module>\K.*?(?=</module>)' pom.xml
                 touch listing.txt
                 cat test.log | tee -a listing.txt
                 
