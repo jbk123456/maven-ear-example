@@ -36,6 +36,8 @@ pipeline {
                 echo " ${modules} "
                 for module in $modules; do
                   echo "hamdi ${module} "
+                  find ${module}/target -type f -name "*${module}*.ear
+                  find ${module}/target -type f -name "*${module}*.war
                   
                 done
                
