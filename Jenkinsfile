@@ -26,7 +26,7 @@ pipeline {
             steps {
                 sh'ls -lr module-ejb/target/'
                 sh'ls -lr module-web/target/'
-                sh"grep -o '<module>[^<]*</module>' pom.xml | sed 's/<\/\?module>//g"
+                sh"awk -F'[<>]' '/<module>/{print $3}' pom.xml"
                 
                 sh """
                 touch listing.txt
