@@ -33,8 +33,7 @@ pipeline {
                   version="1.0-SNAPSHOT"
                   archiveType="ear"
                   grep '\\.ear"$' applications.yaml
-                  deployables=$(grep "\\${ear_extension}\"$" applications.yaml | sed 's/.*\\///;s/\\.ear"//')
-                 // deployables=$(grep '\\.ear"$' applications.yaml | sed 's/.*\\/\\([^/]*\\)\\.ear".*/\\1/')
+                  deployables=$(grep '\\.ear"$' applications.yaml | sed 's/.*\\/\\([^/]*\\)\\.ear".*/\\1/')
                   deployablesWithversion=$(echo "$deployables" | sed "s/@version@/$version/")
                   echo " ${deployablesWithversion}"
                   for file in $deployablesWithversion; do
