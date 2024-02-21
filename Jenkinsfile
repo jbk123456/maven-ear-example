@@ -29,7 +29,7 @@ pipeline {
                 sh """
                 
 
-                grep "Creating CI Applications/test/blabla/archive" test.log | grep -oP "Applications/[^/]+"
+                grep "Creating CI Applications/test/blabla/archive" test.log | grep -oP "Applications/[^/]+/[^/]+"
 
                 """
                  /*sh 'mvn org.cyclonedx:cyclonedx-maven-plugin:makeBom'
