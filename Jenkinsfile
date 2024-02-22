@@ -38,9 +38,9 @@ pipeline {
                   grep $regex applications.yaml
                   deployables=$(grep $regex applications.yaml | sed 's/.*\\/\\([^/]*\\)\\.'"$archive"'".*/\\1/')
                   deployablesWithversion=$(echo "$deployables" | sed "s/@version@/$version/")
-                  echo " ${deployablesWithversion}"
+                  echo " hamdi ${deployablesWithversion}"
                   for file in $deployablesWithversion; do
-                    found=$(find  -name "${file})
+                    found=$(find  -name "${file}.${archive}")
                     # Vérifier si le fichier a été trouvé
                     if [ -z "$found" ]; then
                         echo "Le fichier n'a pas été trouvé."
