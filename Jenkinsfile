@@ -77,7 +77,7 @@ pipeline {
                 
 
                  projectSpace=$(grep -m 1 "Creating CI Applications/*" listing.txt | grep -oP "Applications/[^/]+/[^/]+")
-                 echo "hamdo hhhh ${projectSpace}
+                 echo "hamdo hhhh ${projectSpace}"
                 
                  
                  '''
