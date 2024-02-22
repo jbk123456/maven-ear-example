@@ -76,7 +76,8 @@ pipeline {
                  cat test.log | tee -a listing.txt
                 
 
-                 grep -m 1 "Creating CI Applications/*" listing.txt | grep -oP "Applications/[^/]+/[^/]+"
+                 projectSpace=$(grep -m 1 "Creating CI Applications/*" listing.txt | grep -oP "Applications/[^/]+/[^/]+")
+                 echo "hamdo hhhh ${projectSpace}
                 
                  
                  '''
