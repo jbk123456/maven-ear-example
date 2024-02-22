@@ -70,7 +70,7 @@ pipeline {
                
                 
 
-                '''
+                '''*/
                  sh ''' 
                  touch listing.txt
                  cat test.log | tee -a listing.txt
@@ -79,7 +79,7 @@ pipeline {
                  grep -m 1 "Creating CI Applications/*" listing.txt | grep -oP "Applications/[^/]+/[^/]+"
                 
                  
-                 '''*/
+                 '''
                 
             }
         }
