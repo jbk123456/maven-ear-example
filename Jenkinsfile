@@ -31,7 +31,7 @@ pipeline {
                   mkdir target
                   dest="target" 
                   version="1.0-SNAPSHOT"
-                  archive="ear"
+                  archive='ear'
                   regex='\\.$archive\"$'
 
                   grep $regex applications.yaml
