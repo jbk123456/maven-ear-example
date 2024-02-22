@@ -32,7 +32,7 @@ pipeline {
                   dest="target" 
                   version="1.0-SNAPSHOT"
                   archive='ear'
-                  regex='\\.'+"$archive"+'\"$'
+                  regex='\\.'"$archive"'\"$'
 
                   grep $regex applications.yaml
                   deployables=$(grep '\\.$archive"$' applications.yaml | sed 's/.*\\/\\([^/]*\\)\\.$archive".*/\\1/')
