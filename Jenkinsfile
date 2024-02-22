@@ -33,13 +33,14 @@ pipeline {
                   version="1.0-SNAPSHOT"
                   archive='ear'
                   regex='\\.'"$archive"'\"$'
+                  
 
                   grep $regex applications.yaml
-                  deployables=$(grep $regex applications.yaml | sed 's/.*\\/\\([^/]*\\)\\.$archive".*/\\1/')
+                  deployables=$(grep $regex applications.yaml | sed 's/.*\\/\\([^/]*\\)\\.'"$archive"'".*/\\1/')
                   deployablesWithversion=$(echo "$deployables" | sed "s/@version@/$version/")
                   echo " ${deployablesWithversion}"
                   for file in $deployablesWithversion; do
-                    found=$(find  -name "${file}.${archive}")
+                    found=$(find  -name "${file})
                     # Vérifier si le fichier a été trouvé
                     if [ -z "$found" ]; then
                         echo "Le fichier n'a pas été trouvé."
