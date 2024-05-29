@@ -27,9 +27,14 @@
    </dependencies>
 
    <build>
+   
       <plugins>
          <plugin>
             <artifactId>maven-war-plugin</artifactId>
+          <configuration>                      
+                   <finalName>my-project</finalName>
+       </configuration>
+            
          </plugin>
       </plugins>
    </build>
