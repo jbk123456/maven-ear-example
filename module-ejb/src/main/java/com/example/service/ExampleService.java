@@ -6,7 +6,7 @@ import javax.ejb.Stateless;
 public class ExampleService {
 
     public String whoAmI() {
-        return "i'm ExampleService";
+        return "i'm an ExampleService";
     }
 
 }
