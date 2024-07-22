@@ -21,7 +21,7 @@
     <ssl id="defaultSSLConfig" trustDefaultCerts="true"/>
 
     <library id="shared_libs" filesetDir="/home/jost/git/maven-ear-example/shared" includes="*.jar"></library>
-    <enterpriseApplication id="com.example.application" location="com.example.application.ear" name="com.example.application">
+    <enterpriseApplication id="application-ear-1.0-SNAPSHOT" location="application-ear-1.0-SNAPSHOT.ear" name="application-ear-1.0-SNAPSHOT">
       <classloader commonLibraryRef="shared_libs" delegation="parentLast"></classloader>
 
     </enterpriseApplication>
