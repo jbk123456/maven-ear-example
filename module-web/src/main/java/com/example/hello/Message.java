@@ -1,15 +1,19 @@
 package com.example.hello;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import com.example.service.ExampleService;
 
-@ManagedBean(name = "message", eager = true)
-@RequestScoped
+@javax.inject.Named("message")
 public class Message {
-   private String message = "Hello World!!";
-	
+   private String message = "Hello World!";
+   @Inject 
+   ExampleService exampleService;  
    public String getMessage() {
-      return message;
+      String impl = FacesContext.class.getPackage().getSpecificationTitle();
+      String spec = FacesContext.class.getPackage().getImplementationTitle();
+
+      return String.valueOf(exampleService.whoAmI())+impl + " " + spec+";" +message;
    }
    public void setMessage(String message) {
       this.message = message;

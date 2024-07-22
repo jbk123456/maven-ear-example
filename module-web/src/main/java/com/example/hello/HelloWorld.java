@@ -1,31 +1,27 @@
 package com.example.hello;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-@ManagedBean(name = "helloWorld", eager = true)
-@RequestScoped
+import com.example.service.ExampleService;
+
+@Named("helloWorld")
 public class HelloWorld {
-   @ManagedProperty(value = "#{message}")
-   private Message messageBean;
-   private String message;
    
+   @Inject
+   Message messageBean;
+   
+   @Inject
+   ExampleService exampleService;  
+
+
    public HelloWorld() {
       System.out.println("HelloWorld started!!!");   
-      String impl = FacesContext.class.getPackage().getImplementationVersion();
-      String spec = FacesContext.class.getPackage().getSpecificationVersion();
-      System.out.format("jsf-version::: %s  => %s", impl, spec);   
-
    }
    
    public String getMessage() {
-      
-      if(messageBean != null) {
-         message = messageBean.getMessage();
-      }       
-      return message;
+        
+      return messageBean.getMessage()==null? "oops, message is null!" : messageBean.getMessage() + "; " + String.valueOf(exampleService.whoAmI());
    }
    
    public void setMessageBean(Message message) {
