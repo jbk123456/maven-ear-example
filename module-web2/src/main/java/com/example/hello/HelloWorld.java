@@ -18,10 +18,9 @@ public class HelloWorld {
 
 
    public HelloWorld() {
-      System.out.println("HelloWorld started!");   
+      System.out.println("HelloWorld started!!");   
    }
    
- 
    public String getMessage() {
         
       return messageBean.getMessage()==null? "oops, message is null!" : messageBean.getMessage() + "; " + String.valueOf(exampleService.whoAmI(null));
