@@ -10,7 +10,8 @@ public class ExampleService implements IExampleService {
 
     @Override
     public String whoAmI(ExampleTO to) {
-        return "i'm an ExampleService";
+        //Gson gson = new Gson();
+        return "i'm an ExampleService";// + gson.hashCode();
     }
 
 }

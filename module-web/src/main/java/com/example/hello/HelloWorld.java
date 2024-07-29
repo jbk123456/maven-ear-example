@@ -18,7 +18,8 @@ public class HelloWorld {
 
 
    public HelloWorld() {
-      System.out.println("HelloWorld started!");   
+      com.google.gson.Gson gson = new com.google.gson.Gson();
+      System.out.println("HelloWorld started!" + gson.hashCode());   
    }
    
  

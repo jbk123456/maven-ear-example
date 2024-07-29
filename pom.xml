@@ -93,8 +93,6 @@
             <version>4.5.17.Final</version>
          </dependency>
 
-
-         <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
          <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
@@ -102,11 +100,6 @@
             <scope>provided</scope>
          </dependency>
 
-      </dependencies>
-   </dependencyManagement>
-   <dependencies>
-
-      <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
       <dependency>
          <groupId>com.google.code.gson</groupId>
          <artifactId>gson</artifactId>
@@ -114,8 +107,11 @@
       </dependency>
 
 
-   </dependencies>
-   <build>
+      </dependencies>
+   </dependencyManagement>
+
+
+    <build>
       <pluginManagement>
          <plugins>
             <plugin>

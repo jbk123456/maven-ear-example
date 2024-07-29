@@ -54,7 +54,11 @@
 		<groupId>org.richfaces</groupId>
 		<artifactId>richfaces-page-fragments</artifactId>
 	</dependency>   -->
-
+  
+   <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+   </dependency>
 
    </dependencies>
 
