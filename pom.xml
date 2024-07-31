@@ -14,6 +14,7 @@
       <module>module-ejb2</module>
       <module>module-web</module>
       <module>module-web2</module>
+      <module>module-util</module>
       <module>module-ear</module>
    </modules>
 
@@ -44,6 +45,12 @@
             <artifactId>nextbean</artifactId>
             <version>${project.version}</version>
             <type>ejb</type>
+         </dependency>
+         <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>util</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
          </dependency>
 
          <dependency>
@@ -129,13 +136,39 @@
                <version>3.2.1</version>
                <configuration>
                   <ejbVersion>3.0</ejbVersion>
+                     <archive>
+                       <manifest>
+                         <addClasspath>false</addClasspath>
+                         <classpathPrefix>lib</classpathPrefix>
+                       </manifest>
+                     </archive>
                </configuration>
             </plugin>
+            <plugin>
+               <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
+                <configuration>
+                  <archive>
+                    <manifest>
+                      <addClasspath>false</addClasspath>
+                      <classpathPrefix>lib</classpathPrefix>
+                    </manifest>
+                  </archive>
+            </configuration>
+         </plugin>
 
             <plugin>
                <groupId>org.apache.maven.plugins</groupId>
                <artifactId>maven-war-plugin</artifactId>
                <version>3.3.1</version>
+               <configuration>
+                     <archive>
+                       <manifest>
+                         <addClasspath>false</addClasspath>
+                         <classpathPrefix>lib</classpathPrefix>
+                       </manifest>
+                     </archive>
+               </configuration>
             </plugin>
 
             <plugin>
@@ -147,29 +180,9 @@
                   <defaultLibBundleDir>lib/</defaultLibBundleDir>
                   <generateApplicationXml>true</generateApplicationXml>
                   <initializeInOrder>true</initializeInOrder>
-                  <skinnyWars>true</skinnyWars>
-                  <modules>
-                     <ejbModule>
-                        <groupId>com.example</groupId>
-                        <artifactId>firstbean</artifactId>
-                     </ejbModule>
-                     <ejbModule>
-                        <groupId>com.example</groupId>
-                        <artifactId>nextbean</artifactId>
-                     </ejbModule>
-
-                     <webModule>
-                        <groupId>com.example</groupId>
-                        <artifactId>webui</artifactId>
-                     </webModule>
-                     <webModule>
-                        <groupId>com.example</groupId>
-                        <artifactId>resttest</artifactId>
-                     </webModule>
-                  </modules>
-
+                  <skinnyWars>false</skinnyWars>
                </configuration>
-
+   
             </plugin>
          </plugins>
       </pluginManagement>

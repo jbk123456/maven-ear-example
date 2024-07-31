@@ -13,13 +13,8 @@
 	<artifactId>application-ear</artifactId>
 	<packaging>ear</packaging>
 
-  
-  
-  
 	<dependencies>
-
-	
-		 <dependency>
+		<dependency>
 			<groupId>com.example</groupId>
 			<artifactId>webui</artifactId>
 			<version>${project.version}</version>
@@ -44,10 +39,16 @@
 			<type>ejb</type>
 		</dependency>
 		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>util</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-		 </dependency>
-   
+		 </dependency>   
+
 	</dependencies>
 
 	<build>
@@ -57,6 +58,8 @@
 				<artifactId>maven-ear-plugin</artifactId>
 			</plugin>
 		</plugins>
+
+
 	</build>
 
 </project>

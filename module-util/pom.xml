@@ -10,67 +10,58 @@
       <version>1.0-SNAPSHOT</version>
    </parent>
 
-   <artifactId>webui</artifactId>
-   <packaging>war</packaging>
+   <artifactId>util</artifactId>
+   <packaging>jar</packaging>
 
    <dependencies>
+
       <dependency>
          <groupId>com.example</groupId>
          <artifactId>firstbean</artifactId>
          <version>${project.version}</version>
          <scope>provided</scope>
       </dependency>
-      <dependency>
-         <groupId>com.example</groupId>
-         <artifactId>nextbean</artifactId>
-         <version>${project.version}</version>
-         <scope>provided</scope>
-      </dependency>
-      <dependency>
-         <groupId>com.example</groupId>
-         <artifactId>util</artifactId>
-         <version>${project.version}</version>
-      </dependency>
 
       <dependency>
          <groupId>javax</groupId>
          <artifactId>javaee-api</artifactId>
          <scope>provided</scope>
-
       </dependency>
       <!--JSF 2.2-->
-     
+ 
       <dependency>
          <groupId>org.glassfish</groupId>
          <artifactId>javax.faces</artifactId>
+         <scope>provided</scope>
       </dependency>
 
       <dependency>
          <groupId>org.richfaces</groupId>
          <artifactId>richfaces</artifactId>
+         <scope>provided</scope>
       </dependency>
       <dependency>
          <groupId>org.richfaces</groupId>
          <artifactId>richfaces-core</artifactId>
+         <scope>provided</scope>
       </dependency>
       <!-- <dependency>
-		<groupId>org.richfaces</groupId>
-		<artifactId>richfaces-page-fragments</artifactId>
-	</dependency>   -->
+   <groupId>org.richfaces</groupId>
+   <artifactId>richfaces-page-fragments</artifactId>
+</dependency>   -->
 
       <dependency>
          <groupId>com.google.code.gson</groupId>
          <artifactId>gson</artifactId>
       </dependency>
 
+
    </dependencies>
 
    <build>
-
       <plugins>
          <plugin>
-            <artifactId>maven-war-plugin</artifactId>
-
+            <artifactId>maven-jar-plugin</artifactId>
          </plugin>
       </plugins>
    </build>

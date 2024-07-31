@@ -5,6 +5,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import com.example.service.IExampleService;
+import com.example.to.UtilTO;
 
 @Named("helloWorld")
 @ApplicationScoped 
@@ -19,12 +20,14 @@ public class HelloWorld {
 
    public HelloWorld() {
       com.google.gson.Gson gson = new com.google.gson.Gson();
-      System.out.println("HelloWorld started!" + gson.hashCode());   
+      System.out.println("HelloWorld started!" + gson.hashCode() + " " + new UtilTO().hashCode());   
    }
    
  
    public String getMessage() {
-        
+      com.google.gson.Gson gson = new com.google.gson.Gson();
+      System.out.println("HelloWorld getMessage!" + gson.hashCode() + " " + new UtilTO().hashCode());   
+   
       return messageBean.getMessage()==null? "oops, message is null!" : messageBean.getMessage() + "; " + String.valueOf(exampleService.whoAmI(null));
    }
    
