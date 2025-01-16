@@ -16,13 +16,6 @@
    <dependencies>
 
       <dependency>
-         <groupId>com.example</groupId>
-         <artifactId>firstbean</artifactId>
-         <version>${project.version}</version>
-         <scope>provided</scope>
-      </dependency>
-
-      <dependency>
          <groupId>javax</groupId>
          <artifactId>javaee-api</artifactId>
          <scope>provided</scope>
