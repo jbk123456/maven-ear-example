@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
    <groupId>com.example</groupId>
@@ -11,28 +12,56 @@
    <modules>
       <module>module-ejb</module>
       <module>module-web</module>
+      <module>module-util</module>
       <module>module-ear</module>
    </modules>
 
    <properties>
+      <maven.compiler.source>1.8</maven.compiler.source>
+      <maven.compiler.target>1.8</maven.compiler.target>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+      <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+      <org.richfaces.version>4.5.17.Final</org.richfaces.version>
+
+      <liberty.var.sharedLibDir>{basedir}/shared/libs</liberty.var.sharedLibDir> <!-- used in
+      server.xml -->
+      <liberty.var.artifactId>application-ear-1.0-SNAPSHOT</liberty.var.artifactId> <!-- used in
+      server.xml -->
    </properties>
 
    <dependencyManagement>
       <dependencies>
          <dependency>
             <groupId>com.example</groupId>
-            <artifactId>application-ejb</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <artifactId>firstbean</artifactId>
+            <version>${project.version}</version>
             <type>ejb</type>
+         </dependency>
+         <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>nextbean</artifactId>
+            <version>${project.version}</version>
+            <type>ejb</type>
+         </dependency>
+         <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>util</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
          </dependency>
 
          <dependency>
             <groupId>com.example</groupId>
-            <artifactId>application-web</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <artifactId>webui</artifactId>
+            <version>${project.version}</version>
             <type>war</type>
-            <scope>compile</scope>
+         </dependency>
+         <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>resttest</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
          </dependency>
 
          <dependency>
@@ -42,35 +71,62 @@
             <scope>provided</scope>
          </dependency>
          <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-api</artifactId>
-        <version>5.8.2</version>
-        <scope>test</scope>
-    </dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.8.2</version>
+            <scope>test</scope>
+         </dependency>
+         <dependency>
+            <groupId>com.sun.faces</groupId>
+            <artifactId>jsf-api</artifactId>
+            <version>2.2.14</version>
+         </dependency>
+         <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.faces</artifactId>
+            <version>2.2.14</version>
+         </dependency>
 
+         <dependency>
+            <groupId>org.richfaces</groupId>
+            <artifactId>richfaces</artifactId>
+            <version>4.5.17.Final</version>
+         </dependency>
+         <dependency>
+            <groupId>org.richfaces</groupId>
+            <artifactId>richfaces-core</artifactId>
+            <version>4.5.17.Final</version>
+         </dependency>
 
-    <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
-    <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>javax.servlet-api</artifactId>
-        <version>4.0.1</version>
-        <scope>provided</scope>
-    </dependency>
+         <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+            <scope>provided</scope>
+         </dependency>
+
+      <dependency>
+         <groupId>com.google.code.gson</groupId>
+         <artifactId>gson</artifactId>
+         <version>2.11.0</version>
+      </dependency>
+
 
       </dependencies>
    </dependencyManagement>
 
-   <build>
+
+    <build>
       <pluginManagement>
          <plugins>
             <plugin>
                <groupId>org.apache.maven.plugins</groupId>
                <artifactId>maven-compiler-plugin</artifactId>
                <version>3.9.0</version>
-                  <configuration>
-                     <source>1.8</source>
-                     <target>1.8</target>
-                  </configuration>
+               <configuration>
+                  <source>1.8</source>
+                  <target>1.8</target>
+               </configuration>
             </plugin>
 
             <plugin>
@@ -78,23 +134,66 @@
                <version>3.2.1</version>
                <configuration>
                   <ejbVersion>3.0</ejbVersion>
+                     <archive>
+                       <manifest>
+                         <addClasspath>false</addClasspath>
+                         <classpathPrefix>lib</classpathPrefix>
+                       </manifest>
+                     </archive>
                </configuration>
             </plugin>
+            <plugin>
+               <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
+                <configuration>
+                  <archive>
+                    <manifest>
+                      <addClasspath>false</addClasspath>
+                      <classpathPrefix>lib</classpathPrefix>
+                    </manifest>
+                  </archive>
+            </configuration>
+         </plugin>
 
             <plugin>
                <groupId>org.apache.maven.plugins</groupId>
                <artifactId>maven-war-plugin</artifactId>
                <version>3.3.1</version>
+               <configuration>
+                     <archive>
+                       <manifest>
+                         <addClasspath>false</addClasspath>
+                         <classpathPrefix>lib</classpathPrefix>
+                       </manifest>
+                     </archive>
+               </configuration>
             </plugin>
 
             <plugin>
                <groupId>org.apache.maven.plugins</groupId>
                <artifactId>maven-ear-plugin</artifactId>
                <version>3.3.0</version>
-               
+               <configuration>
+                  <version>7</version>
+                  <defaultLibBundleDir>lib/</defaultLibBundleDir>
+                  <generateApplicationXml>true</generateApplicationXml>
+                  <initializeInOrder>true</initializeInOrder>
+                  <skinnyWars>false</skinnyWars>
+               </configuration>
+   
             </plugin>
          </plugins>
       </pluginManagement>
+      <plugins>
+         <!-- Enable liberty-maven plugin -->
+         <!-- tag::libertyMavenPlugin[] -->
+         <plugin>
+            <groupId>io.openliberty.tools</groupId>
+            <artifactId>liberty-maven-plugin</artifactId>
+            <version>3.10.3</version>
+         </plugin>
+      </plugins>
+
    </build>
 
    <profiles>
@@ -108,7 +207,7 @@
                      <artifactId>maven-ear-plugin</artifactId>
                      <configuration>
                         <unpackTypes>war,ejb</unpackTypes>
-                    </configuration>
+                     </configuration>
                   </plugin>
                </plugins>
             </pluginManagement>
