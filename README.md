@@ -14,7 +14,11 @@ or:
 mvn clean liberty:dev
 ```
 
-Visit:
+### visit
+* local: [http://localhost:9080/webui/](http://localhost:9080/webui/)
+* credentials: admin/admin, webuser/webuser
+
+
 
 ## podman
 
@@ -51,10 +55,8 @@ podman top --latest
 ```
 
 
-## URL
-* local: [http://localhost:9080/webui/](http://localhost:9080/webui/)
+## visit
 * container [http://localhost:9091/webui/](http://localhost:9091/webui/)
-
 * credentials: admin/admin, webuser/webuser
 
 
