@@ -1,7 +1,7 @@
 maven ear example
 =====================
 
-#liberty dev mode
+## liberty dev mode
 
 Start with:
 
@@ -16,7 +16,7 @@ mvn clean liberty:dev
 
 Visit:
 
-#podman
+## podman
 
 build:
 
@@ -51,10 +51,10 @@ podman top --latest
 ```
 
 
+## URL
+* local: [http://localhost:9080/webui/](http://localhost:9080/webui/)
+* container [http://localhost:9091/webui/](http://localhost:9091/webui/)
 
-[http://localhost:9080/webui/](http://localhost:9080/webui/)
-[http://localhost:9091/webui/](http://localhost:9091/webui/)
-
-User/pass: admin/admin, webuser/webuser
+* credentials: admin/admin, webuser/webuser
 
 
