@@ -1,0 +1,29 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: "build-template"
+  annotations:
+    description: "Build template for the maven-ear-example service"
+    tags: "build"
+objects:
+  - apiVersion: v1
+    kind: ImageStream
+    metadata:
+      name: "maven-ear-example-imagestream"
+      labels:
+        name: "maven-ear-example"
+  - apiVersion: v1
+    kind: BuildConfig
+    metadata:
+      name: "maven-ear-example-buildconfig"
+      labels:
+        name: "maven-ear-example"
+    spec:
+      source:
+        type: Binary
+      strategy:
+        type: Docker
+      output:
+        to:
+          kind: ImageStreamTag
+          name: "maven-ear-example-imagestream:1.0-SNAPSHOT"

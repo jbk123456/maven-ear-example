@@ -54,9 +54,81 @@ podman top --latest
 
 ```
 
-
 ## visit
 * container [http://localhost:9091/webui/](http://localhost:9091/webui/)
 * credentials: admin/admin, webuser/webuser
 
+## openshift
+
+### setup
+
+install openshift local and start it, e.g.:
+
+```bash
+./crc start -p ./pull-secret.txt
+#crc config set memory 15000
+
+eval $(crc oc-env)
+#oc login -u kubeadmin https://api.crc.testing:6443
+oc login -u developer https://api.crc.testing:6443
+
+oc new-project demo-app
+```
+
+* default credentials: kubeadmin/gwsR8-mszk8-rNCX5-4oBIt, developer/developer
+
+setup the "buildconfig" and "docker" image streams:
+
+
+```bash
+oc projects # => demo-app
+
+oc process -f build.yaml | oc create -f -
+```
+
+
+### package
+
+In maven-ear-example run:
+
+```bash
+app=maven-ear-example
+mvn clean package
+oc start-build $app-buildconfig --from-dir=.
+
+oc get builds
+oc logs build/$app-buildconfig-1
+oc get imagestreams
+oc describe imagestream/$app-imagestream
+```
+
+### deploy
+
+In maven-ear-example run:
+
+```bash
+app=maven-ear-example
+oc apply -f deploy.yaml
+
+oc get OpenLibertyApplications
+oc describe olapps/$app # "olapps" is short for OpenLibertyApplications 8)
+
+```
+
+## visit
+
+```bash
+oc get routes
+```
+
+Example output:
+
+```bash
+NAME     HOST/PORT                                                     PATH   SERVICES   PORT       TERMINATION   WILDCARD
+maven-ear-example   maven-ear-example-demo-app.2886795274-80-kota02.environments.katacoda.com          maven-ear-example     9091-tcp                 None
+```
+
+
+* container [http://HOST:9092/webui/](http://HOST:9092/webui/)
+* credentials: admin/admin, webuser/webuser
 
