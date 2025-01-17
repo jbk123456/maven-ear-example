@@ -10,6 +10,7 @@ spec:
   service:
     port: 9092
   expose: true
+  manageTLS: true
   env:
     - name: http.port
       value: "9092"

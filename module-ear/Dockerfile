@@ -3,8 +3,8 @@ FROM icr.io/appcafe/open-liberty:kernel-slim-java11-openj9-ubi
 ARG VERSION=1.0
 ARG REVISION=SNAPSHOT
 
-ENV http_proxy "http://92.168.123.1:80"
-ENV https_proxy ""
+ENV http_proxy "http://host.crc.testing:8888"
+ENV https_proxy "https://host.crc.testing:8888"
 
 LABEL \
   org.opencontainers.image.authors="Jost Boekemeier" \
@@ -19,7 +19,7 @@ LABEL \
   summary="maven ear example" \
   description="maven ear example"
 
-RUN set
+
 ARG VERBOSE=true
 COPY --chown=1001:0 src/main/liberty/config /config/
 
