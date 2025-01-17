@@ -29,7 +29,7 @@ app=maven-ear-example
 ver=1.0-SNAPSHOT
 
 mvn clean package 
-podman build -t $app:$ver module-ear/. -f Dockerfile 
+podman build -t $app:$ver module-ear/. 
 podman images
 ```
 
@@ -66,7 +66,7 @@ install openshift local and start it, e.g.:
 
 ```bash
 ./crc start -p ./pull-secret.txt
-#crc config set memory 15000
+
 
 eval $(crc oc-env)
 #oc login -u kubeadmin https://api.crc.testing:6443
@@ -75,7 +75,7 @@ oc login -u developer https://api.crc.testing:6443
 oc new-project demo-app
 ```
 
-* default credentials: kubeadmin/gwsR8-mszk8-rNCX5-4oBIt, developer/developer
+* default credentials: kubeadmin/xxx, developer/developer
 
 setup the "buildconfig" and "docker" image streams:
 
@@ -94,7 +94,8 @@ In maven-ear-example run:
 ```bash
 app=maven-ear-example
 mvn clean package
-oc start-build $app-buildconfig --from-dir=.
+#oc start-build $app-buildconfig --from-dir=.
+oc start-build $app-buildconfig --from-dir=./module-ear -F
 
 oc get builds
 oc logs build/$app-buildconfig-1
