@@ -174,17 +174,14 @@ oc get routes
 Example output:
 
 ```bash
-NAME     HOST/PORT                                                     PATH   SERVICES   PORT       TERMINATION   WILDCARD
-maven-ear-example   maven-ear-example-demo-app.2886795274-80-kota02.environments.katacoda.com          maven-ear-example     9091-tcp                 None
-
 NAME                HOST/PORT                                     PATH   SERVICES            PORT       TERMINATION   WILDCARD
-maven-ear-example   maven-ear-example-demo-app.apps-crc.testing          maven-ear-example   9092-tcp   reencrypt     None
+maven-ear-example   maven-ear-example-demo-app.apps-crc.testing          maven-ear-example   9443-tcp   reencrypt     None
 
 
 ```
 
 
-* container [http://HOST:9092/webui/](http://HOST:9092/webui/)
+* container [http://HOST/webui/](http://HOST/webui/)
 * credentials: admin/admin, webuser/webuser
 
 ### tear down
@@ -227,3 +224,25 @@ podman login --tls-verify=false -u unused -p $(oc whoami -t)  ${REGISTRY}
 virsh -c qemu:///system dumpxml crc | grep -e vcpu -e "memory unit"
 
 ```
+
+debug featureUtility: rsh to the container while building (add RUN sleep 65535 to Dockerfile) and chroot to the image
+
+```bash
+
+oc rsh maven-ear-example-buildconfig-7-build
+find . -name configure.sh
+=> ... 
+=> ./var/lib/containers/storage/overlay/39c7c1331885131a5433fd1bc3c87905b0d295f2f4e7456fbbf0b3c053ea71ca/merged/opt/ol/helpers/build/configure.sh
+
+myroot=/var/lib/containers/storage/overlay/39c7c1331885131a5433fd1bc3c87905b0d295f2f4e7456fbbf0b3c053ea71ca/merged/
+mount --bind /dev $myroot/dev
+mount --bind /proc $myroot/proc
+chroot $myroot
+# path taken from environment (buildah should be called with "-v9" option passed in from the oc start-build command)
+PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/ol/wlp/bin:/opt/ol/helpers/build
+
+https_proxy="" http_proxy="" java -Djava.awt.headless=true --add-opens java.base/java.lang=ALL-UNNAMED --add-exports java.base/sun.security.action=ALL-UNNAMED -jar /opt/ol/wlp/bin/tools/ws-featureUtility.jar installServerFeatures --acceptLicense defaultServer --noCache
+
+```
+
+

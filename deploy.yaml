@@ -8,14 +8,12 @@ spec:
   applicationImage: guide/maven-ear-example-imagestream:1.0-SNAPSHOT
   pullPolicy: Always
   service:
-    port: 9092
+    port: 9443
   expose: true
   manageTLS: true
   env:
-    - name: http.port
-      value: "9092"
     - name: WLP_LOGGING_MESSAGE_FORMAT
-      value: "DEV"
+      value: "json"
     - name: WLP_LOGGING_CONSOLE_LOGLEVEL
       value: "info"
     - name: WLP_LOGGING_MESSAGE_SOURCE
