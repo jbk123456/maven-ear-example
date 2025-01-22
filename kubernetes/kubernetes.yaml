@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: maven-ear-example-deployment
+  labels:
+    app: maven-ear-example
+spec:
+  selector:
+    matchLabels:
+      app: maven-ear-example
+  template:
+    metadata:
+      labels:
+        app: maven-ear-example
+    spec:
+      containers:
+      - name: maven-ear-example-container
+        image: image-registry.openshift-image-registry.svc:5000/demo-image/maven-ear-example:1.0-SNAPSHOT
+        ports:
+        - containerPort: 9080
+        volumeMounts:
+        - name: config-dir
+          mountPath: "/opt/ol/wlp/usr/servers/defaultServer/jvm.properties"
+          subPath: jvm.properties
+          readOnly: true
+        - name: config-dir
+          mountPath: "/opt/ol/wlp/usr/servers/defaultServer/server.xml"
+          subPath: server.xml
+          readOnly: true
+        - name: config-variables
+          mountPath: "/opt/ol/wlp/usr/servers/defaultServer/variables"
+          readOnly: true
+      volumes:
+      - name: config-dir
+        configMap:
+          name: config.dir
+      - name: config-variables
+        configMap:
+          name: config.variables
+
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: maven-ear-example-service
+spec:
+  selector:
+    app: maven-ear-example
+  ports:
+  - protocol: TCP
+    port: 9080
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: maven-ear-example-route
+spec:
+  to:
+    kind: Service
+    name: maven-ear-example-service
+

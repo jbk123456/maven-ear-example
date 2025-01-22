@@ -1,10 +1,10 @@
-FROM icr.io/appcafe/open-liberty:kernel-slim-java11-openj9-ubi
+FROM icr.io/appcafe/open-liberty:kernel-slim-java8-openj9-ubi
 
 ARG VERSION=1.0
 ARG REVISION=SNAPSHOT
 
-ENV http_proxy "http://host.crc.testing:8888"
-ENV https_proxy "https://host.crc.testing:8888"
+#ENV http_proxy "http://host.crc.testing:8888"
+#ENV https_proxy "https://host.crc.testing:8888"
 
 LABEL \
   org.opencontainers.image.authors="Jost Boekemeier" \

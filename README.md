@@ -58,7 +58,7 @@ podman top --latest
 * container [http://localhost:9091/webui/](http://localhost:9091/webui/)
 * credentials: admin/admin, webuser/webuser
 
-## openshift
+## openshift s2i
 
 ### installation
 
@@ -187,7 +187,92 @@ maven-ear-example   maven-ear-example-demo-app.apps-crc.testing          maven-e
 ### tear down
 
 ```bash
-    kubectl delete -f deploy.yaml
+    oc delete -f deploy.yaml
+```
+
+## openshift w/ image
+
+### setup
+
+```bash
+eval $(crc podman-env)
+alias podman=podman-remote
+
+oc login -u developer https://api.crc.testing:6443
+
+oc new-project demo-image
+```
+
+### package
+
+In maven-ear-example run:
+
+```bash
+app=maven-ear-example
+ver=1.0-SNAPSHOT
+
+mvn clean package
+
+podman build -t $app:$ver module-ear/. 
+podman images
+```
+
+
+### push image
+
+```bash
+app=maven-ear-example
+
+oc registry login --insecure=true
+podman tag $app:1.0-SNAPSHOT $(oc registry info)/$(oc project -q)/$app:$ver
+podman push $(oc registry info)/$(oc project -q)/$app:$ver
+oc get imagestream
+
+```
+
+
+### deploy
+
+In maven-ear-example run:
+
+```bash
+(cd kubernetes
+app=maven-ear-example
+ver=1.0-SNAPSHOT
+oc apply -f kubernetes.yaml
+
+oc get pods
+)
+```
+
+### visit
+
+```bash
+oc get routes
+```
+
+Example output:
+
+```bash
+NAME                HOST/PORT                                     PATH   SERVICES            PORT       TERMINATION   WILDCARD
+maven-ear-example   maven-ear-example-demo-image.apps-crc.testing          maven-ear-example   9443-tcp   reencrypt     None
+
+
+```
+
+
+* container [http://HOST/webui/](http://HOST/webui/)
+* credentials: admin/admin, webuser/webuser
+
+### tear down
+
+```bash
+app=maven-ear-example
+(cd kubernetes
+oc delete -f kubernetes.yaml
+oc delete imagestream/$app
+oc delete project demo-image
+)
 ```
 
 ### troubleshooting
@@ -243,6 +328,28 @@ PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/sbin:/usr/local/bin:/usr/s
 
 https_proxy="" http_proxy="" java -Djava.awt.headless=true --add-opens java.base/java.lang=ALL-UNNAMED --add-exports java.base/sun.security.action=ALL-UNNAMED -jar /opt/ol/wlp/bin/tools/ws-featureUtility.jar installServerFeatures --acceptLicense defaultServer --noCache
 
+ podman rmi $(podman images -qa) -f
+
 ```
 
+# ConfigMap
 
+```bash
+(cd kubernetes
+oc create configmap config.variables --from-file=config/variables
+oc create configmap config.dir --from-file=config
+
+oc describe configmaps config.dir config.variables
+
+oc replace --force -f kubernetes.yaml
+
+)
+
+?
+      - securityContext:
+        name: liberty-user-group
+        runAsUser: 1001        
+        runAsGroup: 0
+        allowPrivilegeEscalation: false
+
+```
