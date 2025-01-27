@@ -18,17 +18,20 @@ spec:
         image: image-registry.openshift-image-registry.svc:5000/demo-image/maven-ear-example:1.0-SNAPSHOT
         ports:
         - containerPort: 9080
+        securityContext:
+          fsGroup: default
+          allowPrivilegeEscalation: false
         volumeMounts:
         - name: config-dir
-          mountPath: "/opt/ol/wlp/usr/servers/defaultServer/jvm.properties"
-          subPath: jvm.properties
+          mountPath: "/config/jvm.options"
+          subPath: jvm9.options
           readOnly: true
         - name: config-dir
-          mountPath: "/opt/ol/wlp/usr/servers/defaultServer/server.xml"
+          mountPath: "/config/server.xml"
           subPath: server.xml
           readOnly: true
         - name: config-variables
-          mountPath: "/opt/ol/wlp/usr/servers/defaultServer/variables"
+          mountPath: "/config/variables"
           readOnly: true
       volumes:
       - name: config-dir
