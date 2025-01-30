@@ -18,9 +18,6 @@ spec:
         image: image-registry.openshift-image-registry.svc:5000/demo-image/maven-ear-example:1.0-SNAPSHOT
         ports:
         - containerPort: 9080
-        securityContext:
-          fsGroup: default
-          allowPrivilegeEscalation: false
         volumeMounts:
         - name: config-dir
           mountPath: "/config/jvm.options"

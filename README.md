@@ -58,7 +58,7 @@ podman top --latest
 * container [http://localhost:9091/webui/](http://localhost:9091/webui/)
 * credentials: admin/admin, webuser/webuser
 
-## openshift s2i
+## openshift 
 
 ### installation
 
@@ -74,6 +74,8 @@ The required changes are:
 ```bash
 crc config set network-mode user
 crc config set host-network-access true
+crc config set memory 14384
+crc config set cpus 8
 ```
 
 A proxy config for a local apache might look like this:
@@ -188,6 +190,145 @@ maven-ear-example   maven-ear-example-demo-app.apps-crc.testing          maven-e
 
 ```bash
     oc delete -f deploy.yaml
+```
+
+## local s2i
+
+This builds a local docker container using s2i binary and podman.
+
+### setup
+
+Download [s2i](https://github.com/openshift/source-to-image/releases/download/v1.4.0/source-to-image-v1.4.0-d3544c7e-linux-amd64.tar.gz) or install it:
+
+```bash
+
+go install github.com/openshift/source-to-image/cmd/s2i@latest
+```
+
+Make sure docker emulation is installed and running:
+```bash
+yum install podman-docker
+systemctl podman.service restart
+```
+
+### package, build and deploy
+
+In maven-ear-example run:
+
+```bash
+JAVA_HOME=/usr/java/jdk-11.0.15
+DOCKER_HOST=unix:///run/user/$UID/podman/podman.sock
+app=maven-ear-example
+
+mvn clean package
+s2i --loglevel=5  build . openliberty/open-liberty-s2i:24.0.0.12-java11  $app  # --as-dockerfile Containerfile
+docker run -it -p 9080:9080  -P $app
+ 
+```
+
+Examine:
+
+```bash
+podman exec -it $(podman ps | sed 1d | awk '{print $1}') /bin/bash
+
+```
+
+### visit
+
+* container [http://localhost:9080/webui/](http://localhost:9080/webui/)
+* credentials: admin/admin, webuser/webuser
+
+### see also 
+
+- [s2i](https://github.com/openshift/source-to-image)
+- [liberty s2i](https://github.com/OpenLiberty/open-liberty-s2i?tab=readme-ov-file)
+- [liberty docker](https://github.com/OpenLiberty/ci.docker)
+
+### tear down
+
+```bash
+    podman rm $app
+```
+
+## openshift s2i
+
+
+### setup
+
+```bash
+eval $(crc oc-env)
+oc login -u developer https://api.crc.testing:6443
+```
+
+* default credentials: kubeadmin/xxx, developer/developer
+
+create a new project:
+
+
+```bash
+oc new-project demo-app-s2i
+```
+
+
+### package, build and deploy
+
+In maven-ear-example run:
+
+```bash
+JAVA_HOME=/usr/java/jdk-11.0.15
+DOCKER_HOST=unix:///run/user/$UID/podman/podman.sock
+app=maven-ear-example
+
+mvn clean package
+oc import-image openliberty/open-liberty-s2i:24.0.0.12-java11 --confirm
+
+oc new-build --name=$app --image-stream=open-liberty-s2i:24.0.0.12-java11 --binary=true
+
+oc start-build $app  --from-dir=./module-ear -F
+
+oc new-app $app --name=$app
+
+oc expose service $app --path=/webui
+
+```
+
+Please see [releases](https://github.com/OpenLiberty/open-liberty-s2i/releases) for details.
+
+### visit
+
+```bash
+oc get routes
+```
+
+Example output:
+
+```bash
+NAME                HOST/PORT                                     PATH   SERVICES            PORT       TERMINATION   WILDCARD
+maven-ear-example   maven-ear-example-demo-app.apps-crc.testing          maven-ear-example   9443-tcp   reencrypt     None
+
+
+```
+
+
+* container [http://HOST/](http://HOST/)
+* credentials: admin/admin, webuser/webuser
+
+### ConfigMap
+
+```bash
+(cd kubernetes
+oc create configmap config.variables --from-file=config/variables
+oc create configmap config.dir --from-file=config
+oc describe configmaps config.dir config.variables
+
+oc patch deployment/$app --patch-file $app_mount_config.patch.yaml
+)
+
+```
+### tear down
+
+```bash
+    oc delete -f --all
 ```
 
 ## openshift w/ image
@@ -341,15 +482,8 @@ oc create configmap config.dir --from-file=config
 
 oc describe configmaps config.dir config.variables
 
-oc replace --force -f kubernetes.yaml
+oc apply -f kubernetes.yaml
 
 )
-
-?
-      - securityContext:
-        name: liberty-user-group
-        runAsUser: 1001        
-        runAsGroup: 0
-        allowPrivilegeEscalation: false
 
 ```

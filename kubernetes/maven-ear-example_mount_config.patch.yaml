@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+spec:
+  template:
+    spec:
+      containers:
+      - name: maven-ear-example
+        volumeMounts:
+        - name: config-dir
+          mountPath: "/config/jvm.options"
+          subPath: jvm9.options
+          readOnly: true
+        - name: config-dir
+          mountPath: "/config/server.xml"
+          subPath: server.xml
+          readOnly: true
+        - name: config-variables
+          mountPath: "/config/variables"
+          readOnly: true
+      volumes:
+      - name: config-dir
+        configMap:
+          name: config.dir
+      - name: config-variables
+        configMap:
+          name: config.variables
+
