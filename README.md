@@ -276,7 +276,6 @@ In maven-ear-example run:
 
 ```bash
 JAVA_HOME=/usr/java/jdk-11.0.15
-DOCKER_HOST=unix:///run/user/$UID/podman/podman.sock
 app=maven-ear-example
 
 mvn clean package
@@ -284,7 +283,7 @@ oc import-image openliberty/open-liberty-s2i:24.0.0.12-java11 --confirm
 
 oc new-build --name=$app --image-stream=open-liberty-s2i:24.0.0.12-java11 --binary=true
 
-oc start-build $app  --from-dir=./module-ear -F
+oc start-build $app -v9  --from-dir=./module-ear -F
 
 oc new-app $app --name=$app
 
@@ -325,13 +324,101 @@ oc patch deployment/$app --patch-file $app_mount_config.patch.yaml
 )
 
 ```
+
+
 ### tear down
 
 ```bash
     oc delete -f --all
 ```
 
-## openshift w/ image
+## openshift s2i from git
+
+
+### setup
+
+```bash
+eval $(crc oc-env)
+oc login -u developer https://api.crc.testing:6443
+```
+
+* default credentials: kubeadmin/xxx, developer/developer
+
+create a new project:
+
+
+```bash
+oc new-project demo-app-s2i-from-git
+```
+
+
+### package, build and deploy
+
+In maven-ear-example run:
+
+```bash
+JAVA_HOME=/usr/java/jdk-11.0.15
+app=maven-ear-example
+
+mvn clean package
+oc import-image openliberty/open-liberty-s2i:24.0.0.12-java11 --confirm
+
+oc new-build . --name=$app  --image-stream=open-liberty-s2i:24.0.0.12-java11
+oc start-build $app
+
+oc new-app $app --name=$app
+oc expose service $app --path=/webui
+
+```
+
+Please see [releases](https://github.com/OpenLiberty/open-liberty-s2i/releases) for details.
+
+### visit
+
+```bash
+oc get routes
+```
+
+Example output:
+
+```bash
+NAME                HOST/PORT                                     PATH   SERVICES            PORT       TERMINATION   WILDCARD
+maven-ear-example   maven-ear-example-demo-app.apps-crc.testing          maven-ear-example   9443-tcp   reencrypt     None
+
+
+```
+
+
+* container [http://HOST/](http://HOST/)
+* credentials: admin/admin, webuser/webuser
+
+### ConfigMap
+
+```bash
+(cd kubernetes
+oc create configmap config.variables --from-file=config/variables
+oc create configmap config.dir --from-file=config
+oc describe configmaps config.dir config.variables
+
+oc patch deployment/$app --patch-file $app_mount_config.patch.yaml
+)
+
+```
+
+### trigger a new build
+
+```bash
+
+curl -X POST -k https://api.crc.testing:6443/apis/build.openshift.io/v1/namespaces/demo-app-s2i/buildconfigs/maven-ear-example/webhooks/SECRET/generic
+```
+
+### tear down
+
+```bash
+    oc delete -f --all
+`
+
+## openshift with image
 
 ### setup
 

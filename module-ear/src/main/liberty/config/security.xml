@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<server description="new server">
+	<featureManager>
+    </featureManager>
+	<!-- FIXME: change to 30m -->
+	<ltpa keysFileName="resources/security/ltpa.keys" keysPassword="changeit" expiration="30s"/>
+	<!-- Default SSL configuration enables trust for default certificates from the Java runtime -->
+	<ssl id="defaultSSLConfig" trustDefaultCerts="true"/>
+	<basicRegistry id="basic" realm="BasicRealm">
+		<user name="admin" password="admin"/>
+		<user name="webuser" password="webuser"/>
+	</basicRegistry>
+</server>
+
