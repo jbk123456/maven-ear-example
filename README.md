@@ -216,7 +216,6 @@ JAVA_HOME=/usr/java/jdk-11.0.15
 
 
 mvn clean install
-oc delete bc/$app is/$app
 
 
 oc start-build $app  --from-dir=. --exclude='(^|/)\.git(/|$)|pom\.xml' # -v9 
