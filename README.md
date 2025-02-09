@@ -54,7 +54,7 @@ podman top --latest
 
 ```
 
-## visit
+### visit
 * container [http://localhost:9091/webui/](http://localhost:9091/webui/)
 * credentials: admin/admin, webuser/webuser
 
@@ -67,132 +67,23 @@ Install openshift local "crc" and start it.
 On RHEL8, which is based on Fedora 28, crc uses NetworkManager and dnsmasq, see
 [https://crc.dev/docs/networking/](https://crc.dev/docs/networking/) for details
 
-Since ws-featureUtility.jar needs a proxy anyway, we change the crc configuration to user networking mode and setup a local http proxy.
 
-The required changes are:
+### setup
+
+By default crc allocates 31gb of disk space for the crc vm, of which only ~5gb is available on a fresh install.
+So we increase the disc size and restart crc:
 
 ```bash
 crc config set network-mode user
 crc config set host-network-access true
 crc config set memory 14384
 crc config set cpus 8
-```
-
-A proxy config for a local apache might look like this:
-
-```/etc/httpd/conf/httpd.conf
-Listen 8888 
-<VirtualHost *:8888>
-ProxyRequests On
- ProxyVia On
-<Proxy "*">
- Allow from all
- </Proxy>
-</VirtualHost>
-```
-
-To avoid adding SEL rules for port 8888 and to avoid conflicts with crc, you might want to disable port 80 and 443 in apache http.conf file and
-temporarily set SEL policy to permissive:
-
-```bash
-setenforce permissive
-systemctl start httpd.service
-```
-
-By default crc allocates 31gb of disk space for the crc vm, of which only ~5gb is available on a fresh install.
-So we increase the disc size and restart crc:
-
-```bash
 crc config set disk-size 50
-
-crc cleanup
-crc setup
-crc start -p ./pull-secret.txt # --log-level debug
-```
-
-The crc also needs the openshift operator. It can be installed
-using the web console (as kubeadmin).
-
-### setup
-
-```bash
-eval $(crc oc-env)
-oc login -u kubeadmin https://api.crc.testing:6443
-oc adm policy add-cluster-role-to-user cluster-admin developer
-oc login -u developer https://api.crc.testing:6443
-
-oc new-project demo-app
-```
-
-* default credentials: kubeadmin/xxx, developer/developer
-
-setup the "buildconfig" and "docker" image streams:
-
-
-```bash
-oc projects # => demo-app
-
-oc process -f build.yaml | oc create -f -
 ```
 
 
-### package
 
-In maven-ear-example run:
-
-```bash
-app=maven-ear-example
-mvn clean package
-#oc start-build $app-buildconfig --from-dir=.
-oc start-build $app-buildconfig --from-dir=./module-ear -F
-
-oc get builds
-oc logs build/$app-buildconfig-1
-oc get imagestreams
-oc describe imagestream/$app-imagestream
-```
-
-Note that the Dockerfile is located in the module-ear directory and contains a reference to the local http proxy we've set up earlier. The proxy is required by installFeatures which, for some reason, cannot access FEATURE_REPO_URL directly. Please see [installFeatures](https://openliberty.io/docs/latest/reference/command/featureUtility-commands.html) for details.
-
-### deploy
-
-In maven-ear-example run:
-
-```bash
-app=maven-ear-example
-oc apply -f deploy.yaml
-
-oc get OpenLibertyApplications
-oc describe olapps/$app # "olapps" is short for OpenLibertyApplications 8)
-
-```
-
-### visit
-
-```bash
-oc get routes
-```
-
-Example output:
-
-```bash
-NAME                HOST/PORT                                     PATH   SERVICES            PORT       TERMINATION   WILDCARD
-maven-ear-example   maven-ear-example-demo-app.apps-crc.testing          maven-ear-example   9443-tcp   reencrypt     None
-
-
-```
-
-
-* container [http://HOST/webui/](http://HOST/webui/)
-* credentials: admin/admin, webuser/webuser
-
-### tear down
-
-```bash
-    oc delete -f deploy.yaml
-```
-
-## local s2i
+## s2i binary
 
 This builds a local docker container using s2i binary and podman.
 
@@ -217,11 +108,13 @@ In maven-ear-example run:
 
 ```bash
 JAVA_HOME=/usr/java/jdk-11.0.15
-DOCKER_HOST=unix:///run/user/$UID/podman/podman.sock
+export DOCKER_HOST=unix:///run/user/$UID/podman/podman.sock
 app=maven-ear-example
+img=open-liberty-s2i:24.0.0.12-java11
+#s2i=file://./.s2i/bin
 
 mvn clean package
-s2i --loglevel=5  build . openliberty/open-liberty-s2i:24.0.0.12-java11  $app  # --as-dockerfile Containerfile
+s2i --loglevel=5  build . openliberty/$img  $app  --copy --exclude='(^|/)\.git(/|$)|pom\.xml' # --scripts-url=$s2i 
 docker run -it -p 9080:9080  -P $app
  
 ```
@@ -253,64 +146,6 @@ podman exec -it $(podman ps | sed 1d | awk '{print $1}') /bin/bash
 ## openshift s2i
 
 
-### setup
-
-```bash
-eval $(crc oc-env)
-oc login -u developer https://api.crc.testing:6443
-```
-
-* default credentials: kubeadmin/xxx, developer/developer
-
-create a new project:
-
-
-```bash
-oc new-project demo-app-s2i
-```
-
-
-### package, build and deploy
-
-In maven-ear-example run:
-
-```bash
-JAVA_HOME=/usr/java/jdk-11.0.15
-app=maven-ear-example
-
-mvn clean package
-oc import-image openliberty/open-liberty-s2i:24.0.0.12-java11 --confirm
-
-oc new-build --name=$app --image-stream=open-liberty-s2i:24.0.0.12-java11 --binary=true
-
-oc start-build $app -v9  --from-dir=./module-ear -F
-
-oc new-app $app --name=$app
-
-oc expose service $app --path=/webui
-
-```
-
-Please see [releases](https://github.com/OpenLiberty/open-liberty-s2i/releases) for details.
-
-### visit
-
-```bash
-oc get routes
-```
-
-Example output:
-
-```bash
-NAME                HOST/PORT                                     PATH   SERVICES            PORT       TERMINATION   WILDCARD
-maven-ear-example   maven-ear-example-demo-app.apps-crc.testing          maven-ear-example   9443-tcp   reencrypt     None
-
-
-```
-
-
-* container [http://HOST/](http://HOST/)
-* credentials: admin/admin, webuser/webuser
 
 ### ConfigMap
 
@@ -332,7 +167,7 @@ oc patch deployment/$app --patch-file $app_mount_config.patch.yaml
     oc delete -f --all
 ```
 
-## openshift s2i from git
+## openshift s2i from git or local source
 
 
 ### setup
@@ -341,8 +176,6 @@ oc patch deployment/$app --patch-file $app_mount_config.patch.yaml
 eval $(crc oc-env)
 oc login -u developer https://api.crc.testing:6443
 ```
-
-* default credentials: kubeadmin/xxx, developer/developer
 
 create a new project:
 
@@ -357,17 +190,37 @@ oc new-project demo-app-s2i-from-git
 In maven-ear-example run:
 
 ```bash
-JAVA_HOME=/usr/java/jdk-11.0.15
+img=open-liberty-s2i:24.0.0.12-java11
 app=maven-ear-example
 
-mvn clean package
-oc import-image openliberty/open-liberty-s2i:24.0.0.12-java11 --confirm
+oc import-image openliberty/$img --confirm
+```
 
-oc new-build . --name=$app  --image-stream=open-liberty-s2i:24.0.0.12-java11
-oc start-build $app
+source build:
 
-oc new-app $app --name=$app
+```bash
+oc new-build . --name=$app --image-stream=$img -o json | 
+#  jq '.items[1].spec.strategy.sourceStrategy+={scripts:"'$s2i'"}' |
+  oc apply -f-
+
+oc new-app $app --name=$app -o yaml | oc apply -f-
 oc expose service $app --path=/webui
+
+```
+
+binary build:
+
+```bash
+JAVA_HOME=/usr/java/jdk-11.0.15
+#s2i=file://./.s2i/bin
+
+
+mvn clean install
+oc delete bc/$app is/$app
+
+
+oc start-build $app  --from-dir=. --exclude='(^|/)\.git(/|$)|pom\.xml' # -v9 
+oc logs -f build/$(oc get builds | sed 1d |  fgrep 'Running'  | awk '{print $1}')
 
 ```
 
@@ -375,21 +228,7 @@ Please see [releases](https://github.com/OpenLiberty/open-liberty-s2i/releases) 
 
 ### visit
 
-```bash
-oc get routes
-```
-
-Example output:
-
-```bash
-NAME                HOST/PORT                                     PATH   SERVICES            PORT       TERMINATION   WILDCARD
-maven-ear-example   maven-ear-example-demo-app.apps-crc.testing          maven-ear-example   9443-tcp   reencrypt     None
-
-
-```
-
-
-* container [http://HOST/](http://HOST/)
+* container [http://HOST/](http://maven-ear-example-demo-app-s2i-from-git.apps-crc.testing/webui/)
 * credentials: admin/admin, webuser/webuser
 
 ### ConfigMap
@@ -405,20 +244,21 @@ oc patch deployment/$app --patch-file $app_mount_config.patch.yaml
 
 ```
 
-### trigger a new build
+### trigger a new soure build
+
+This triggers a source build from the git:
 
 ```bash
 
 curl -X POST -k https://api.crc.testing:6443/apis/build.openshift.io/v1/namespaces/demo-app-s2i/buildconfigs/maven-ear-example/webhooks/SECRET/generic
 ```
 
-### tear down
+### TODO
 
-```bash
-    oc delete -f --all
-`
+Unlike s2i binary "--scripts-url" doesn't work as expected.
 
-## openshift with image
+
+## openshift with external image
 
 ### setup
 
@@ -458,7 +298,6 @@ oc get imagestream
 
 ```
 
-
 ### deploy
 
 In maven-ear-example run:
@@ -475,33 +314,9 @@ oc get pods
 
 ### visit
 
-```bash
-oc get routes
-```
-
-Example output:
-
-```bash
-NAME                HOST/PORT                                     PATH   SERVICES            PORT       TERMINATION   WILDCARD
-maven-ear-example   maven-ear-example-demo-image.apps-crc.testing          maven-ear-example   9443-tcp   reencrypt     None
-
-
-```
-
-
-* container [http://HOST/webui/](http://HOST/webui/)
+* container [http://HOST/webui/](http://maven-ear-example-demo-image.apps-crc.testing/webui/)
 * credentials: admin/admin, webuser/webuser
 
-### tear down
-
-```bash
-app=maven-ear-example
-(cd kubernetes
-oc delete -f kubernetes.yaml
-oc delete imagestream/$app
-oc delete project demo-image
-)
-```
 
 ### troubleshooting
 
