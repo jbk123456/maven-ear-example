@@ -5,14 +5,24 @@ set -x
 # Source code provided to S2I is at /tmp/src
 LOCAL_SOURCE_DIR=/tmp/src/module-ear
 ARTIFACT_DIR=${ARTIFACT_DIR:-target}
-SERVER_DIR=/opt/ol/wlp/usr/servers/defaultServer
+SERVER_DIR=/opt/ol/wlp
+SERVER_OUT_DIR=$SERVER_DIR/output/defaultServer
+SERVER_CNF_DIR=$SERVER_DIR/usr/servers/defaultServer
 
 /usr/libexec/s2i/assemble || /usr/local/s2i/assemble
 rc=$?
 umask=002
-cp -vr $LOCAL_SOURCE_DIR/$ARTIFACT_DIR/src/main/liberty/config/* $SERVER_DIR
-cp -vr $LOCAL_SOURCE_DIR/$ARTIFACT_DIR/*.ear $SERVER_DIR/apps
-chmod 660 $SERVER_DIR/resources/security/ltpa.keys
+
+# create a tlpa key and chmod, so that the java process group (which has a randomized uid) can access it
+mkdir -vp $SERVER_CNF_DIR/resources/security
+find $SERVER_CNF_DIR/resources -type d -print | xargs chmod g+rwx
+securityUtility createLTPAKeys --server=defaultServer --password=${ltpa_keys_password:-changeit}
+cp -v $SERVER_OUT_DIR/resources/security/ltpa.keys $SERVER_CNF_DIR/resources/security/ltpa.keys
+chmod 660 $SERVER_CNF_DIR/resources/security/ltpa.keys
+
+# copy files using umask
+cp -vr $LOCAL_SOURCE_DIR/$ARTIFACT_DIR/src/main/liberty/config/* $SERVER_CNF_DIR
+cp -vr $LOCAL_SOURCE_DIR/$ARTIFACT_DIR/*.ear $SERVER_CNF_DIR/apps
 
 if [ $rc -eq 0 ]; then
     echo "After successful assembling"
