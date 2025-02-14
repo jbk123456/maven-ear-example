@@ -14,7 +14,9 @@
 	<variable name="http.port" defaultValue="9080"/>
 	<variable name="https.port" defaultValue="9443"/>
 	<variable name="artifactId" defaultValue="application-ear-1.0-SNAPSHOT"/>	
-  <variable name="ltpa.keys.password" defaultValue="{xor}PDc+MTg6Nis="/>
+  <variable name="password/ssl" defaultValue="changeit"/>
+  <variable name="password/ltpa" defaultValue="${password/ssl}"/>
+
 
 	<!--set in pom.xml otherwise use default-->
 	<variable name="sharedLibsDirectory" defaultValue="/home/jost/git/maven-ear-example/shared"/>

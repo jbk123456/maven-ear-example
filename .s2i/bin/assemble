@@ -11,18 +11,27 @@ SERVER_CNF_DIR=$SERVER_DIR/usr/servers/defaultServer
 
 /usr/libexec/s2i/assemble || /usr/local/s2i/assemble
 rc=$?
-umask=002
 
+
+sc=$(cat $LOCAL_SOURCE_DIR/$ARTIFACT_DIR/src/main/liberty/config/variables/password/ssl) || sc=${password_ssl:-changeid}
+lk=$(cat $LOCAL_SOURCE_DIR/$ARTIFACT_DIR/src/main/liberty/config/variables/password/ltpa) || lk=${password_ltpa:-$sc}
+
+umask=002
 # create a tlpa key and chmod, so that the java process group (which has a randomized uid) can access it
 mkdir -vp $SERVER_CNF_DIR/resources/security
 find $SERVER_CNF_DIR/resources -type d -print | xargs chmod g+rwx
-securityUtility createLTPAKeys --server=defaultServer --password=${ltpa_keys_password:-changeit}
-cp -v $SERVER_OUT_DIR/resources/security/ltpa.keys $SERVER_CNF_DIR/resources/security/ltpa.keys
-chmod 660 $SERVER_CNF_DIR/resources/security/ltpa.keys
+
+rm -vf $SERVER_OUT_DIR/resources/security/ltpa.keys  $SERVER_OUT_DIR/resources/security/key.p12 $SERVER_CNF_DIR/config/configDropins/defaults/keystore.xml
+securityUtility createLTPAKeys       --server=defaultServer --password=$lk
+securityUtility createSSLCertificate --server=defaultServer --password=$sc --validity=365
+cp -v $SERVER_OUT_DIR/resources/security/ltpa.keys $SERVER_CNF_DIR/resources/security/ltpa.keys && chmod 660 $SERVER_CNF_DIR/resources/security/ltpa.keys
+cp -v $SERVER_OUT_DIR/resources/security/key.p12   $SERVER_CNF_DIR/resources/security/key.p12   && chmod 440 $SERVER_CNF_DIR/resources/security/key.p12
+
 
 # copy files using umask
 cp -vr $LOCAL_SOURCE_DIR/$ARTIFACT_DIR/src/main/liberty/config/* $SERVER_CNF_DIR
 cp -vr $LOCAL_SOURCE_DIR/$ARTIFACT_DIR/*.ear $SERVER_CNF_DIR/apps
+ls -lR $SERVER_CNF_DIR
 
 if [ $rc -eq 0 ]; then
     echo "After successful assembling"

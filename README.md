@@ -179,7 +179,9 @@ oc new-build . --name=$app --image-stream=$img -o json |
 #  jq '.items[1].spec.strategy.sourceStrategy+={scripts:"'$s2i'"}' |
   oc apply -f-
 
-oc new-app $app --name=$app -o yaml | oc apply -f-
+oc new-app $app --name=$app -o json |
+  jq '.items|=map(select(.kind=="Deployment").spec.template.spec.containers|=map(select(.name="maven-ear-example").resources+={limits:{memory:"1Gi"},requests:{memory:"512Mi"}}))' |
+  oc apply -f-
 oc expose service $app --path=/webui
 
 ```
