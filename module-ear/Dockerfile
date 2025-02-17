@@ -21,13 +21,11 @@ LABEL \
 
 
 ARG VERBOSE=true
-COPY --chown=1001:0 src/main/liberty/config /config/
+COPY --chown=1001:0 . /tmp/src
+RUN chmod +x /tmp/src/.s2i/bin/assemble
+RUN /tmp/src/.s2i/bin/assemble true
 
 RUN features.sh
 
-# set automatically, see: https://github.com/OpenLiberty/ci.maven/blob/main/docs/dev.md
-ENV OPENJ9_SCC=false
-
-COPY --chown=1001:0 target/*.ear /config/apps
-
 RUN configure.sh
+
