@@ -2,10 +2,11 @@
 echo "Before assembling"
 set -x
 
-/bin/bash /tmp/src/kubernetes/assemble.sh
 
-$1 || /usr/libexec/s2i/assemble || /usr/local/s2i/assemble
+/usr/libexec/s2i/assemble || /usr/local/s2i/assemble
 rc=$?
+
+/bin/bash /tmp/src/kubernetes/assemble.sh
 
 if [ $rc -eq 0 ]; then
     echo "After successful assembling"

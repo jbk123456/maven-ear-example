@@ -110,11 +110,14 @@ In maven-ear-example run:
 JAVA_HOME=/usr/java/jdk-11.0.15
 export DOCKER_HOST=unix:///run/user/$UID/podman/podman.sock
 app=maven-ear-example
-img=open-liberty-s2i:24.0.0.12-java11
+name=open-liberty-s2i:24.0.0.12-java11
+ver=latest
+img=$name:$ver
+user=openliberty
 #s2i=file://./.s2i/bin
 
 mvn clean package
-s2i --loglevel=5  build . openliberty/$img  $app  --copy --exclude='(^|/)\.git(/|$)|pom\.xml' # --scripts-url=$s2i 
+s2i --loglevel=5  build . $user/$img  $app  --copy   # --exclude='(^|/)\.git(/|$)|pom\.xml' # --scripts-url=$s2i 
 docker run -it -p 9080:9080  -P $app
  
 ```
@@ -287,6 +290,8 @@ oc get pods
 ## custom s2i base image
 ```bash
 oc new-project custom-image
+user=jost2boekemeier
+passwd=*****
 podman login -u "$user" -p "$passwd" docker.io
 
 name=open-liberty-s2i-webhooks
@@ -305,9 +310,7 @@ oc secrets link default docker --for=pull
 
 oc tag docker.io/$user/$img $img
 oc import-image docker.io/$user/$img --confirm
-oc new-build --name=$app --image-stream=$img  --binary -o json |    oc apply -f-
-oc start-build $app  --from-dir=. # -v9 
-oc new-app $app --name=$app -o json |   oc apply -f-
+oc new-app . --name=$app --image=$user/$img
 
 app_endpoint=maven-ear-example
 api_endpoint=$app_endpoint-webhooks-api
