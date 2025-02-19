@@ -175,9 +175,11 @@ oc import-image openliberty/$img --confirm
 source build:
 
 ```bash
-oc new-build . --name=$app --image-stream=$img -o json | 
+oc new-build . --name=$app --image-stream=$img  -o json | 
 #  jq '.items[1].spec.strategy.sourceStrategy+={scripts:"'$s2i'"}' |
   oc apply -f-
+
+oc start-build $app  --from-dir=. # -v9 
 
 oc new-app $app --name=$app -o json |
   jq '.items|=map(select(.kind=="Deployment").spec.template.spec.containers|=map(select(.name="maven-ear-example").resources+={limits:{memory:"1Gi"},requests:{memory:"512Mi"}}))' |
@@ -197,9 +199,8 @@ mvn clean install
 
 
 oc start-build $app  --from-dir=. --exclude='(^|/)\.git(/|$)|pom\.xml' # -v9 
-oc logs -f build/$(oc get builds | sed 1d |  fgrep 'Running'  | awk '{print $1}')
 
-```
+oc logs -f build/$(oc get builds | sed 1d |  fgrep 'Running'  | awk '{print $1}')
 
 Please see [releases](https://github.com/OpenLiberty/open-liberty-s2i/releases) for details.
 
@@ -281,6 +282,43 @@ oc get pods
 
 * container [http://HOST/webui/](http://maven-ear-example-demo-image.apps-crc.testing/webui/)
 * credentials: admin/admin, webuser/webuser
+
+
+## custom s2i base image
+```bash
+oc new-project custom-image
+podman login -u "$user" -p "$passwd" docker.io
+
+name=open-liberty-s2i-webhooks
+ver=1.0-SNAPSHOT
+img=$name:$ver
+
+podman build -f kubernetes/Dockerfile -t $img
+podman tag $img $user/$img
+podman push $user/$img
+```
+
+### create new app
+```bash
+oc create secret docker-registry docker --docker-server hub.docker.com --docker-username=$user --docker-password=*****
+oc secrets link default docker --for=pull
+
+oc tag docker.io/$user/$img $img
+oc import-image docker.io/$user/$img --confirm
+oc new-build --name=$app --image-stream=$img  --binary -o json |    oc apply -f-
+oc start-build $app  --from-dir=. # -v9 
+oc new-app $app --name=$app -o json |   oc apply -f-
+
+app_endpoint=maven-ear-example
+api_endpoint=$app_endpoint-webhooks-api
+oc expose service $app --port=9080 --path=/webui --name=$app_endpoint
+oc expose service $app --port=9000 --path=/hooks --name=$api_endpoint
+```
+### test
+
+```bash
+curl -H "Content-Type:application/json" -X POST -d "{\"binary\":\"$(echo hello | base64 -)\"}" http://$api_endpoint-$(oc project -q).apps-crc.testing/hooks/run-cmd-webhook
+```
 
 
 ### troubleshooting

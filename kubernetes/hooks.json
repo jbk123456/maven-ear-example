@@ -2,12 +2,12 @@
   {
     "id": "run-cmd-webhook",
     "execute-command": "run-cmd",
-    "command-working-directory": "",
+    "command-working-directory": ".",
     "pass-file-to-command":
     [
       {
       	"source": "payload",
- 	"name": "binary",
+ 	      "name": "binary",
       	"envname": "ENV_VARIABLE",
                                   
       	"base64decode": true,     

@@ -16,14 +16,21 @@ LABEL \
   summary="Custom Liberty S2I Builder Image" \
   description="Liberty S2I builder image with a webhook listener on port 9000"
 
+ENV OPENJ9_SCC=false
+
 USER root
 RUN dnf -y install golang-bin
 RUN go install github.com/adnanh/webhook@latest
 RUN mv ~/go/bin/webhook /usr/local/bin/
 RUN dnf -y remove golang-bin
-COPY --chown=1001:0  hooks.json /usr/local/etc/
-COPY --chown=1001:0 --chmod=551 run-cmd /usr/local/bin/
-EXPOSE 9000
-ENTRYPOINT ["webhook", "-hooks", "/usr/local/etc/hooks.json", "-verbose"]
+COPY --chown=1001:0 --chmod=660 hooks.json /usr/local/etc/
+COPY --chown=1001:0 --chmod=550 run-cmd /usr/local/bin/
+COPY --chown=1001:0 --chmod=550 docker-server.sh /usr/local/bin/
+RUN mkdir /usr/local/etc/logs && chmod 770 /usr/local/etc/logs && touch /usr/local/etc/logs/webhook.logs && chmod 660 /usr/local/etc/logs/webhook.logs
 
+USER 1001
+WORKDIR /tmp/installables
+EXPOSE 9000
+CMD /opt/ol/wlp/bin/server run defaultServer
+ENTRYPOINT ["/usr/local/bin/docker-server.sh"]
 
