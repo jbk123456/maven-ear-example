@@ -1,16 +1,16 @@
 [
   {
     "id": "run-cmd-webhook",
-    "execute-command": "run-cmd",
-    "command-working-directory": ".",
+    "execute-command": "/usr/local/bin/run-cmd",
+    "command-working-directory": "/tmp",
     "pass-file-to-command":
     [
       {
-      	"source": "payload",
- 	      "name": "binary",
-      	"envname": "ENV_VARIABLE",
-                                  
-      	"base64decode": true,     
+        "source": "payload",
+        "name": "binary",
+        "envname": "ENV_VARIABLE",
+
+        "base64decode": true,
       }
     ],
     "include-command-output-in-response": true

@@ -26,7 +26,7 @@ RUN dnf -y remove golang-bin
 COPY --chown=1001:0 --chmod=660 hooks.json /usr/local/etc/
 COPY --chown=1001:0 --chmod=550 run-cmd /usr/local/bin/
 COPY --chown=1001:0 --chmod=550 docker-server.sh /usr/local/bin/
-RUN mkdir /usr/local/etc/logs && chmod 770 /usr/local/etc/logs && touch /usr/local/etc/logs/webhook.logs && chmod 660 /usr/local/etc/logs/webhook.logs
+RUN mkdir /usr/local/etc/logs && chmod 770 /usr/local/etc/logs
 
 USER 1001
 WORKDIR /tmp/installables
