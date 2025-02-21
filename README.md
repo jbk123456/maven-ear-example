@@ -288,6 +288,9 @@ oc get pods
 
 
 ## custom s2i base image
+
+Create and push a docker image
+
 ```bash
 oc new-project custom-image
 user=jost2boekemeier
@@ -295,7 +298,7 @@ passwd=*****
 podman login -u "$user" -p "$passwd" docker.io
 
 name=open-liberty-s2i-webhooks
-ver=1.0-SNAPSHOT
+ver=1.1-SNAPSHOT
 img=$name:$ver
 
 podman build -f kubernetes/Dockerfile -t $img
@@ -303,14 +306,25 @@ podman tag $img $user/$img
 podman push $user/$img
 ```
 
-### create new app
+Import the created docker image
+
 ```bash
 oc create secret docker-registry docker --docker-server hub.docker.com --docker-username=$user --docker-password=*****
 oc secrets link default docker --for=pull
 
-oc tag docker.io/$user/$img $img
 oc import-image docker.io/$user/$img --confirm
-oc new-app . --name=$app --image=$user/$img
+oc tag docker.io/$user/$img $img
+```
+### create new app
+
+Build an app from source code
+
+
+```bash
+# in maven-ear-example
+mvn clean
+
+oc new-app . --name=$app --image=$user/$img  --build-env='MAVEN_ARGS=-e -s /home/default/.m2/settings.xml -Popenshift -Dcom.redhat.xpaas.repo.redhatga package'
 
 app_endpoint=maven-ear-example
 api_endpoint=$app_endpoint-webhooks-api
@@ -324,67 +338,14 @@ curl -H "Content-Type:application/json" -X POST -d "{\"binary\":\"$(echo hello |
 ```
 
 
-### troubleshooting
-
-```bash
-oc whoami --show-console
-
-oc get events
-oc get pods
-
-KUBE_EDITOR="gedit"
-project=demo-app
-deployment=maven-ear-example
-
-oc debug deployment/$deployment --as-root -n $project
-oc get deployment -n $deployment
-oc debug deployment/$deployment --as-root -n $project # geht nicht wenn nicht startfähig
-oc edit deployment/$deployment
-
-
- oc edit deployment/openliberty-app-sample
-
-oc get pods
-oc rsh <pod_name>  
-
-
----- get image from internal image stream ---
-=> https://medium.com/@mgreenbe_84803/using-openshifts-internal-registry-e4a81d09da59
-
-REGISTRY="$(oc get route/default-route -n openshift-image-registry -o=jsonpath='{.spec.host}')/openshift"
-
-podman login --tls-verify=false -u unused -p $(oc whoami -t)  ${REGISTRY}
-
-virsh -c qemu:///system dumpxml crc | grep -e vcpu -e "memory unit"
-
-```
-
-debug featureUtility: rsh to the container while building (add RUN sleep 65535 to Dockerfile) and chroot to the image
-
-```bash
-
-oc rsh maven-ear-example-buildconfig-7-build
-find . -name configure.sh
-=> ... 
-=> ./var/lib/containers/storage/overlay/39c7c1331885131a5433fd1bc3c87905b0d295f2f4e7456fbbf0b3c053ea71ca/merged/opt/ol/helpers/build/configure.sh
-
-myroot=/var/lib/containers/storage/overlay/39c7c1331885131a5433fd1bc3c87905b0d295f2f4e7456fbbf0b3c053ea71ca/merged/
-mount --bind /dev $myroot/dev
-mount --bind /proc $myroot/proc
-chroot $myroot
-# path taken from environment (buildah should be called with "-v9" option passed in from the oc start-build command)
-PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/ol/wlp/bin:/opt/ol/helpers/build
-
-https_proxy="" http_proxy="" java -Djava.awt.headless=true --add-opens java.base/java.lang=ALL-UNNAMED --add-exports java.base/sun.security.action=ALL-UNNAMED -jar /opt/ol/wlp/bin/tools/ws-featureUtility.jar installServerFeatures --acceptLicense defaultServer --noCache
-
- podman rmi $(podman images -qa) -f
-
-```
-
 # ConfigMap
 
 ```bash
 (cd kubernetes
+oc delete configmap config.variables
+oc delete configmap config.dir --from-file=config
+
+
 oc create configmap config.variables --from-file=config/variables
 oc create configmap config.dir --from-file=config
 
