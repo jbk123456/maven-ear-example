@@ -30,6 +30,21 @@
       server.xml -->
    </properties>
 
+    <pluginRepositories>
+        <!-- Configure Sonatype OSS Maven snapshots repository -->
+        <pluginRepository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+
    <dependencyManagement>
       <dependencies>
          <dependency>
@@ -184,7 +199,16 @@
          <plugin>
             <groupId>io.openliberty.tools</groupId>
             <artifactId>liberty-maven-plugin</artifactId>
-            <version>3.10.3</version>
+            <version>3.11.3-SNAPSHOT</version>
+					 <configuration>
+								<runtimeArtifact>
+								    <groupId>io.openliberty</groupId>
+								    <artifactId>openliberty-runtime</artifactId>
+								    <version>25.0.0.2</version>
+								    <type>zip</type>
+								</runtimeArtifact>
+						</configuration>
+
          </plugin>
 
 					<plugin>
