@@ -13,17 +13,18 @@ lk=$(cat $LOCAL_SOURCE_DIR/$ARTIFACT_DIR/src/main/liberty/config/variables/passw
 
 umask=002
 # create a tlpa key and chmod, so that the java process group (which has a randomized uid) can access it
-mkdir -vp $SERVER_CNF_DIR/resources/security
-find $SERVER_CNF_DIR/resources -type d -print | xargs chmod g+rwx
+#mkdir -vp $SERVER_CNF_DIR/resources/security
+#find $SERVER_CNF_DIR/resources -type d -print | xargs chmod g+rwx
 
-rm -vrf $SERVER_OUT_DIR/resources/security $SERVER_CNF_DIR/config/configDropins/defaults/keystore.xml
-securityUtility createLTPAKeys       --server=defaultServer --password=$lk
-securityUtility createSSLCertificate --server=defaultServer --password=$sc --validity=365
-cp -v $SERVER_OUT_DIR/resources/security/ltpa.keys $SERVER_CNF_DIR/resources/security/ltpa.keys && chmod 660 $SERVER_CNF_DIR/resources/security/ltpa.keys
-cp -v $SERVER_OUT_DIR/resources/security/key.p12   $SERVER_CNF_DIR/resources/security/key.p12   && chmod 440 $SERVER_CNF_DIR/resources/security/key.p12
+#rm -vrf $SERVER_OUT_DIR/resources/security $SERVER_CNF_DIR/config/configDropins/defaults/keystore.xml
+#securityUtility createLTPAKeys       --server=defaultServer --password=$lk
+#securityUtility createSSLCertificate --server=defaultServer --password=$sc --validity=365
+#cp -v $SERVER_OUT_DIR/resources/security/ltpa.keys $SERVER_CNF_DIR/resources/security/ltpa.keys && chmod 660 $SERVER_CNF_DIR/resources/security/ltpa.keys
+#cp -v $SERVER_OUT_DIR/resources/security/key.p12   $SERVER_CNF_DIR/resources/security/key.p12   && chmod 440 $SERVER_CNF_DIR/resources/security/key.p12
 
 
 # copy files using umask
 cp -vr $LOCAL_SOURCE_DIR/$ARTIFACT_DIR/src/main/liberty/config/* $SERVER_CNF_DIR
 cp -vr $LOCAL_SOURCE_DIR/$ARTIFACT_DIR/*.ear $SERVER_CNF_DIR/apps
 
+#cp -r /tmp/src/* /usr/local/src && chmod g+rwx /home/default && find /home/default -type d -print | xargs chmod g+rw

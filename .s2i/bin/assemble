@@ -2,8 +2,6 @@
 echo "Before assembling"
 set -x
 
-mvn help:effective-settings
-
 
 /usr/libexec/s2i/assemble || /usr/local/s2i/assemble
 rc=$?

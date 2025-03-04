@@ -20,7 +20,7 @@ LABEL \
 ARG VERBOSE=true
 
 USER root
-RUN dnf -y install golang-bin wget
+RUN dnf -y install golang-bin wget git dos2unix
 RUN go install github.com/adnanh/webhook@latest
 RUN mv ~/go/bin/* /usr/local/bin/
 RUN export local=/usr/local; cd /usr/local; wget https://dlcdn.apache.org/maven/maven-3/3.9.4/binaries/apache-maven-3.9.4-bin.tar.gz&& tar xzf apache-maven-3.9.4-bin.tar.gz && rm -f apache-maven-3.9.4-bin.tar.gz && ln -fs $(pwd)/apache-maven-3.9.4/bin/mvn $local/bin/mvn
@@ -29,7 +29,7 @@ RUN wget https://github.com/openshift/source-to-image/releases/download/v1.4.0/s
 COPY --chown=1001:0 --chmod=660 hooks.json /usr/local/etc/
 COPY --chown=1001:0 --chmod=550 run-cmd /usr/local/bin/
 COPY --chown=1001:0 --chmod=550 docker-server.sh /usr/local/bin/
-RUN mkdir /usr/local/etc/logs && chmod 770 /usr/local/etc/logs && chmod 1777 /usr/local/src /tmp/installables
+RUN mkdir /usr/local/etc/logs && chmod 770 /usr/local/etc/logs && chmod 1777 /usr/local/src /tmp/installables && chown -R 1001:0 /home/default && chmod -R g+rwx /home/default
 
 USER 1001
 EXPOSE 9000

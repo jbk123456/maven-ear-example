@@ -5,10 +5,10 @@
 
 <ltpa />
 	<ltpa keysFileName="resources/security/ltpa.keys" keysPassword="${password/ltpa}" expiration="30m"/>
-	<ssl id="defaultSSLConfig" trustDefaultCerts="true" location="resources/security/key.p12" password="${password/ssl}"/>
+	<ssl id="defaultSSLConfig"  trustDefaultCerts="true" location="resources/security/key.p12" password="${password/ssl}"/>
+ 
 	<basicRegistry id="basic" realm="BasicRealm">
 		<user name="admin" password="admin"/>
 		<user name="webuser" password="webuser"/>
 	</basicRegistry>
 </server>
-
