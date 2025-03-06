@@ -8,8 +8,10 @@ SERVER_DIR=/opt/ol/wlp
 SERVER_OUT_DIR=$SERVER_DIR/output/defaultServer
 SERVER_CNF_DIR=$SERVER_DIR/usr/servers/defaultServer
 
-sc=$(cat $LOCAL_SOURCE_DIR/$ARTIFACT_DIR/src/main/liberty/config/variables/password/ssl) || sc=${password_ssl:-changeid}
-lk=$(cat $LOCAL_SOURCE_DIR/$ARTIFACT_DIR/src/main/liberty/config/variables/password/ltpa) || lk=${password_ltpa:-$sc}
+#sc=$(cat $LOCAL_SOURCE_DIR/$ARTIFACT_DIR/src/main/liberty/config/variables/password/ssl) || sc=${password_ssl:-changeid}
+#lk=$(cat $LOCAL_SOURCE_DIR/$ARTIFACT_DIR/src/main/liberty/config/variables/password/ltpa) || lk=${password_ltpa:-$sc}
+ls -lR $SERVER_CNF_DIR
+ls -lR $SERVER_DIR
 
 umask=002
 # create a tlpa key and chmod, so that the java process group (which has a randomized uid) can access it
@@ -25,6 +27,6 @@ umask=002
 
 # copy files using umask
 cp -vr $LOCAL_SOURCE_DIR/$ARTIFACT_DIR/src/main/liberty/config/* $SERVER_CNF_DIR
-cp -vr $LOCAL_SOURCE_DIR/$ARTIFACT_DIR/*.ear $SERVER_CNF_DIR/apps
+#cp -vr $LOCAL_SOURCE_DIR/$ARTIFACT_DIR/*.ear $SERVER_CNF_DIR/apps
 
 #cp -r /tmp/src/* /usr/local/src && chmod g+rwx /home/default && find /home/default -type d -print | xargs chmod g+rw
