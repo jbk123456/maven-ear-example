@@ -27,6 +27,6 @@ umask=002
 
 # copy files using umask
 cp -vr $LOCAL_SOURCE_DIR/$ARTIFACT_DIR/src/main/liberty/config/* $SERVER_CNF_DIR
-#cp -vr $LOCAL_SOURCE_DIR/$ARTIFACT_DIR/*.ear $SERVER_CNF_DIR/apps
+cp -vr $LOCAL_SOURCE_DIR/$ARTIFACT_DIR/*.ear $SERVER_CNF_DIR/apps
 
 #cp -r /tmp/src/* /usr/local/src && chmod g+rwx /home/default && find /home/default -type d -print | xargs chmod g+rw

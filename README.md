@@ -201,7 +201,7 @@ JAVA_HOME=/usr/java/jdk-11.0.15
 mvn clean install
 
 
-oc start-build $app  --from-dir=. --exclude='(^|/)\.git(/|$)|pom\.xml' # -v9 
+oc start-build $app  --from-dir=. --exclude='pom\.xml' # -v9 
 
 oc logs -f build/$(oc get builds | sed 1d |  fgrep 'Running'  | awk '{print $1}')
 
@@ -225,6 +225,64 @@ curl -X POST -k https://api.crc.testing:6443/apis/build.openshift.io/v1/namespac
 ### TODO
 
 Unlike s2i binary "--scripts-url" doesn't work as expected.
+
+
+## openshift s2i with init-container
+
+
+### setup
+
+```bash
+eval $(crc oc-env)
+oc login -u developer https://api.crc.testing:6443
+```
+
+create a new project:
+
+
+```bash
+oc new-project demo-app-init-container
+```
+
+
+### package, build and deploy
+
+In maven-ear-example run:
+
+```bash
+img=open-liberty-s2i:24.0.0.12-java11
+app=maven-ear-example
+
+oc import-image openliberty/$img --confirm
+```
+
+Modify server.xml to include
+```xml
+    <!-- Automatically expand WAR files and EAR files -->
+    <applicationManager autoExpand="true"/>
+```
+
+Build
+```bash
+JAVA_HOME=/usr/java/jdk-11.0.15
+
+mvn clean package
+oc new-build . --name=$app --image-stream=$img  -o json |  oc apply -f-
+oc start-build $app  --from-dir=. --exclude='pom\.xml' # -v9 
+
+Deploy
+
+```bash
+oc apply -f kubernetes/init-container.yaml
+oc expose service $app --path=/webui
+
+```
+
+### visit
+
+* container [http://HOST/](http://maven-ear-example-demo-app-s2i-from-git.apps-crc.testing/webui/)
+* credentials: admin/admin, webuser/webuser
+
 
 
 ## openshift with external image
@@ -298,7 +356,7 @@ passwd=*****
 podman login -u "$user" -p "$passwd" docker.io
 
 name=open-liberty-s2i-webhooks
-ver=1.1-SNAPSHOT
+ver=1.4-SNAPSHOT
 img=$name:$ver
 
 podman build -f kubernetes/Dockerfile -t $img
@@ -335,6 +393,31 @@ oc expose service $app --port=9000 --path=/hooks --name=$api_endpoint
 
 ```bash
 curl -H "Content-Type:application/json" -X POST -d "{\"binary\":\"$(echo hello | base64 -)\"}" http://$api_endpoint-$(oc project -q).apps-crc.testing/hooks/run-cmd-webhook
+```
+
+## devspace-operator
+
+Follow the instructions at [openshift without olm](https://github.com/devfile/devworkspace-operator/blob/main/docs/installation/openshift-without-olm.md):
+
+```bash
+oc create namespace devworkspace-controller
+oc apply -f https://raw.githubusercontent.com/devfile/devworkspace-operator/refs/heads/main/deploy/deployment/openshift/combined.yaml
+oc wait --namespace devworkspace-controller --timeout 90s  --for=condition=ready pod  --selector=app.kubernetes.io/part-of=devworkspace-operator
+```
+
+Create workspace
+
+```bash
+oc create namespace devworkspace-maven-ear-example
+oc apply -f kubernetes/devworkspace.yaml
+```
+### Start the workspace
+
+Start the workspace and check if it has been started (may take several minutes):
+
+```bash
+oc patch devworkspace git-clone-sample-devworkspace -n devworkspace-maven-ear-example --type merge -p '{"spec": {"started": true}}'
+oc get devworkspace -n devworkspace-maven-ear-example
 ```
 
 

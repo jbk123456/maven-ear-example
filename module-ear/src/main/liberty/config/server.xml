@@ -19,6 +19,9 @@
   <variable name="password/ltpa" defaultValue="${password/ssl}"/>
 
 
+  <!-- Automatically expand WAR files and EAR files -->
+  <applicationManager autoExpand="true"/>
+
 	<!--set in pom.xml otherwise use default-->
 	<variable name="sharedLibsDirectory" defaultValue="/home/jost/git/maven-ear-example/shared"/>
 	<!--set in pom.xml otherwise use default-->

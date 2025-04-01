@@ -1,0 +1,28 @@
+kind: DevWorkspace
+apiVersion: workspace.devfile.io/v1alpha2
+metadata:
+  name: git-clone-sample-devworkspace
+  namespace: devworkspace-maven-ear-example
+spec:
+  started: true
+  template:
+    projects:
+      - name: maven-ear-example
+        git:
+          remotes:
+            origin: "https://github.com/jbk123456/maven-ear-example.git"
+    commands:
+      - id: say-hello
+        exec:
+          component: che-code-runtime-description
+          commandLine: echo "Hello from $(pwd)"
+          workingDir: ${PROJECT_SOURCE}/app
+  contributions:
+    - name: che-code
+      uri: https://eclipse-che.github.io/che-plugin-registry/main/v3/plugins/che-incubator/che-code/latest/devfile.yaml
+      components:
+        - name: che-code-runtime-description
+          container:
+            env:
+              - name: CODE_HOST
+                value: 0.0.0.0
