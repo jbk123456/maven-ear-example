@@ -1,6 +1,10 @@
 maven ear example
 =====================
 
+```bash
+git clone git@github.com:jbk123456/maven-ear-example.git
+```
+
 ## liberty dev mode
 
 Start with:
