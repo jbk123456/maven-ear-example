@@ -17,6 +17,8 @@ maven ear example
 
 * open maven -> installations -> choose maven 3.9.9 and select default
 
+* open maven -> annotation processing -> select "automatically configure ... "
+
 * open maven -> jee integration -> [ ] Enable java ee integration (all off!)
 
 * open help -> eclipse marketplace and drag drop [liberty tools](https://marketplace.eclipse.org/marketplace-client-intro?mpc_install=5571241) to install it, then restart eclipse
