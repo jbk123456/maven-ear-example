@@ -239,26 +239,29 @@
          <plugin>
             <groupId>io.openliberty.tools</groupId>
             <artifactId>liberty-maven-plugin</artifactId>
-            <version>3.11.2</version>
+            <version>3.11.3</version>
             <configuration>
-               <arquillianProperties>
-                  <!-- <javaVmArguments>
+					<changeOnDemandTestsAction>true</changeOnDemandTestsAction>
+					<compileWait>86400</compileWait>
+					<recompileDependencies>false</recompileDependencies>
+					<arquillianProperties>
+						<!-- <javaVmArguments>
                      -Dsystem.context.root=/${arquillian.war.name}
                   </javaVmArguments> -->
-                 
-            <hostName>localhost</hostName>
-            <serverName>defaultServer</serverName>
- 
-            <!-- check the 'quickStartSecurity' on 'server.xml' -->
-            <username>admin</username>
-            <password>admin</password>
- 
-            <!-- check the 'server.xml' -->
-            <httpPort>9080</httpPort>
-            <!-- <httpsPort>9443</httpsPort>  -->
 
-        
-               </arquillianProperties>
+						<hostName>localhost</hostName>
+						<serverName>defaultServer</serverName>
+
+						<!-- check the 'quickStartSecurity' on 'server.xml' -->
+						<username>admin</username>
+						<password>admin</password>
+
+						<!-- check the 'server.xml' -->
+						<httpPort>9080</httpPort>
+						<!-- <httpsPort>9443</httpsPort>  -->
+
+
+					</arquillianProperties>
             </configuration>
                             <executions>
                    
