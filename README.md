@@ -11,7 +11,7 @@ maven ear example
 
 * Download and install java11 e.g. to /usr/lib/jvm/java-11-openjdk-11.0.25.0.9-2.el8.x86_64
 
-* In Eclipse open  Window -> Preferrences 
+* In Eclipse open  Window -> Preferences 
 
 * open java -> installed jres => choose java11
 
@@ -20,6 +20,8 @@ maven ear example
 * open maven -> jee integration -> [ ] Enable java ee integration (all off!)
 
 * open help -> eclipse marketplace and drag drop [liberty tools](https://marketplace.eclipse.org/marketplace-client-intro?mpc_install=5571241) to install it, then restart eclipse
+
+* open Window -> Preferences -> Liberty -> choose maven 3.9.9 (make sure there's no space in the path)
 
 * clone maven-ear-example.git and open it (file -> import -> maven -> existing maven projects -> maven-ear-example)
 
