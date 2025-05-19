@@ -1,8 +1,54 @@
 maven ear example
 =====================
 
+## Eclipse integration
+
+* Download and start Eclipse 2024-06 jee
+
+* disable automatic build (Project -> Build automatically)
+
+* Download maven 3.9.9 and extract it (e.g. to ~/apache-maven-3.9.9)
+
+* Download and install java11 e.g. to /usr/lib/jvm/java-11-openjdk-11.0.25.0.9-2.el8.x86_64
+
+* In Eclipse open  Window -> Preferrences 
+
+* open java -> installed jres => choose java11
+
+* open maven -> installations -> choose maven 3.9.9 and select default
+
+* open maven -> jee integration -> [ ] Enable java ee integration (all off!)
+
+* open help -> eclipse marketplace and drag drop [liberty tools](https://marketplace.eclipse.org/marketplace-client-intro?mpc_install=5571241) to install it, then restart eclipse
+
+* clone maven-ear-example.git and open it (file -> import -> maven -> existing maven projects -> maven-ear-example)
+
+
 ```bash
 git clone git@github.com:jbk123456/maven-ear-example.git
+```
+
+* right-click on maven-ear-example/pom.xml and run as maven ... type "clean install"
+
+* open "liberty dashboard" and click application -> debug
+
+* open console view and select maven console
+
+* enable automatic build. The maven console shall stay empty until a file is changed
+
+* edit ExampleService.java, change "i'm an ExampleService" to "I'm an ExampleService" and visit http://localhost:9080/webui (webuser / webuser)
+
+* output should start with "I'm an ExampleService"
+
+* revert the change and watch both, the maven console and the liberty terminal. The console shall recompile the changed file and liberty dev shall pick it up
+
+* stop liberty dev mode (type q <enter> in the terminal window)
+
+* change ExampleService.java to "I am an Example Service", open the target folder and examine its content 
+
+```bash
+strings -- 'module-ejb/target/classes/com/example/service/impl/ExampleService.class'  | fgrep "an ExampleService"
+# => 
 ```
 
 ## liberty dev mode
