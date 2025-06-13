@@ -14,6 +14,7 @@
       <module>module-web</module>
       <module>module-util</module>
       <module>module-ear</module>
+      <module>module-foo</module>
    </modules>
 
    <properties>
@@ -234,47 +235,7 @@
       </pluginManagement>
 
       <plugins>
-         <!-- Enable liberty-maven plugin -->
-         <!-- tag::libertyMavenPlugin[] -->
-         <plugin>
-            <groupId>io.openliberty.tools</groupId>
-            <artifactId>liberty-maven-plugin</artifactId>
-            <version>3.11.3</version>
-            <configuration>
-					<changeOnDemandTestsAction>true</changeOnDemandTestsAction>
-					<compileWait>86400</compileWait>
-					<recompileDependencies>false</recompileDependencies>
-					<arquillianProperties>
-						<!-- <javaVmArguments>
-                     -Dsystem.context.root=/${arquillian.war.name}
-                  </javaVmArguments> -->
-
-						<hostName>localhost</hostName>
-						<serverName>defaultServer</serverName>
-
-						<!-- check the 'quickStartSecurity' on 'server.xml' -->
-						<username>admin</username>
-						<password>admin</password>
-
-						<!-- check the 'server.xml' -->
-						<httpPort>9080</httpPort>
-						<!-- <httpsPort>9443</httpsPort>  -->
-
-
-					</arquillianProperties>
-            </configuration>
-                            <executions>
-                   
-                    <execution>
-                        <id>configure-arquillian-xml</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>configure-arquillian</goal>
-                        </goals>
-                    </execution>
-                </executions>
-         </plugin>
-               <plugin>
+                <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.5.2</version>
