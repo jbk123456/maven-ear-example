@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<server description="new server">
+	<!-- Enable features -->
+	<!--The Liberty Maven Plugin has generated Liberty features necessary for your application in configDropins/overrides/generated-features.xml-->
+	<featureManager>
+		<feature>jsfContainer-2.2</feature>
+		<feature>jsp-2.3</feature>
+		<feature>ejb-3.2</feature>
+		<feature>jaxb-2.2</feature>
+		<feature>appSecurity-2.0</feature>
+		<feature>localConnector-1.0</feature>
+		<feature>restConnector-2.0</feature>
+	</featureManager>
+
+	<variable name="http.port" defaultValue="9080"/>
+	<variable name="https.port" defaultValue="9443"/>
+	<variable name="artifactId" defaultValue="application-ear-1.0-SNAPSHOT"/>	
+  <variable name="password/ssl" defaultValue="changeit"/>
+  <variable name="password/ltpa" defaultValue="${password/ssl}"/>
+
+
+  <!-- Automatically expand WAR files and EAR files -->
+  <applicationManager autoExpand="false"/>
+
+	<!--set in pom.xml otherwise use default-->
+	<variable name="sharedLibsDirectory" defaultValue="/home/jost/git/maven-ear-example/shared"/>
+	<!--set in pom.xml otherwise use default-->
+	<include location="security.xml" onConflict="merge"/>
+	<httpEndpoint httpPort="${http.port}" httpsPort="${https.port}" id="defaultHttpEndpoint" host="*"/>
+	<library id="shared_libs" filesetDir="${sharedLibsDirectory}" includes="*.jar"/>
+	<enterpriseApplication location="${artifactId}.ear">
+		<classloader commonLibraryRef="shared_libs" delegation="parentLast"/>
+	</enterpriseApplication>
+
+  <remoteFileAccess>
+      <writeDir>${server.config.dir}/dropins</writeDir>
+  </remoteFileAccess>
+
+</server>
