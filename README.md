@@ -60,7 +60,7 @@ strings -- 'module-ejb/target/classes/com/example/service/impl/ExampleService.cl
 Start with:
 
 ```bash
-mvn clean io.openliberty.tools:liberty-maven-plugin:3.10.3:dev
+mvn clean io.openliberty.tools:liberty-maven-plugin:3.11.3:dev
 ```
 or:
 

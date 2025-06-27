@@ -1,10 +1,15 @@
 package com.example.service.impl;
 
+import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Supplier;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.naming.Context;
 import javax.naming.InitialContext;
+
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import com.example.service.IExampleService;
 import com.example.service.IRemoteExampleService;
@@ -12,6 +17,10 @@ import com.example.to.ExampleTO;
 
 @Stateless
 public class ExampleService implements IExampleService {
+
+        @Inject
+        @ConfigProperty(name="name")
+        private Optional<String> name;
 
         @Override
         public String whoAmI(ExampleTO to) {
@@ -42,7 +51,7 @@ public class ExampleService implements IExampleService {
                 e.printStackTrace();
                 throw new IllegalArgumentException(e);
             }
-            return "i'm an ExampleService";// + gson.hashCode();
+            return String.format("i'm %s", name.get());
         }
         private static String toCorbaname(String jndiName) {
             // Escape . into %5C%2E (\.) since it's an INS naming delimiter

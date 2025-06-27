@@ -10,6 +10,7 @@
     <feature>jaxb-2.2</feature>
     <feature>appSecurity-2.0</feature>
 		<feature>localConnector-1.0</feature>
+    <feature>mpConfig-1.3</feature>
     </featureManager>
     
   <variable name="http.port" defaultValue="9080" />
