@@ -1,15 +1,11 @@
-package com.example.service;
+package com.example.service.config;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 
-import org.eclipse.microprofile.config.Config;
-import org.eclipse.microprofile.config.ConfigProvider;
 import org.eclipse.microprofile.config.spi.ConfigSource;
 
 public class FileSystemConfigSource implements ConfigSource {
@@ -28,7 +24,7 @@ public class FileSystemConfigSource implements ConfigSource {
  
     @Override
     public Set getPropertyNames() {
-       return null;
+       return getProperties().keySet();
     }
  
     @Override

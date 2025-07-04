@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
+import org.eclipse.microprofile.config.ConfigProvider;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import com.example.service.IExampleService;
@@ -18,9 +19,13 @@ import com.example.to.ExampleTO;
 @Stateless
 public class ExampleService implements IExampleService {
 
-        @Inject
-        @ConfigProperty(name="name")
-        private Optional<String> name;
+//    @Inject
+//    @ConfigProperty(name="answer")
+//    private Optional<String> answer;
+ 
+    @Inject
+    @ConfigProperty(name="app_name")
+    private Optional<String> name;
 
         @Override
         public String whoAmI(ExampleTO to) {
@@ -51,7 +56,11 @@ public class ExampleService implements IExampleService {
                 e.printStackTrace();
                 throw new IllegalArgumentException(e);
             }
-            return String.format("i'm %s", name.get());
+            String testval = ConfigProvider.getConfig().getOptionalValue("testval", String.class).orElse("unknown");
+			String testrate = ConfigProvider.getConfig().getOptionalValue("testrate", String.class).orElse("unknown");
+System.out.println("value for microprofile.config.properties.testrate:::" + testrate);
+
+            return String.format("i'm %s and %s ", name.get(), testval);
         }
         private static String toCorbaname(String jndiName) {
             // Escape . into %5C%2E (\.) since it's an INS naming delimiter

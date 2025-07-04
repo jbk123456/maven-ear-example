@@ -71,15 +71,7 @@
 					</arquillianProperties>
             </configuration>
                             <executions>
-                   
-                    <execution>
-                        <id>configure-arquillian-xml</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>configure-arquillian</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                 </executions>
          </plugin>
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
