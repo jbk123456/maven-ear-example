@@ -493,8 +493,10 @@ oc apply -f kubernetes.yaml
 )
 
 ```
+
 # Service Account
 
+```bash
 instance=https://api.crc.testing:6443
 project=serviceaccountdemo
 user=bender
@@ -513,4 +515,4 @@ oc login  --token $token  https://api.crc.testing:6443
 
 pod=$(oc get pods | fgrep postgresql | awk '{print $1}')
 oc exec $pod -- ls /
-
+```
