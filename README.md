@@ -513,6 +513,6 @@ token=$(oc create token $user --namespace $project --duration=$expire|tee $user.
 oc create rolebinding $user-admin-rolebinding --clusterrole admin --serviceaccount $project:$user
 oc login  --token $token  https://api.crc.testing:6443
 
-pod=$(oc get pods | fgrep postgresql | awk '{print $1}')
+pod=$(oc get pods | fgrep $sampleimage | awk '{print $1}')
 oc exec $pod -- ls /
 ```
