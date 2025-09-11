@@ -493,3 +493,24 @@ oc apply -f kubernetes.yaml
 )
 
 ```
+# Service Account
+
+instance=https://api.crc.testing:6443
+project=serviceaccountdemo
+user=bender
+sampleimage=bash
+expire=4294967296s
+
+oc login -u developer $instance
+oc new-project $project
+oc new-app $sampleimage
+
+oc create serviceaccount $user
+token=$(oc create token $user --namespace $project --duration=$expire|tee $user.token)
+
+oc create rolebinding $user-admin-rolebinding --clusterrole admin --serviceaccount $project:$user
+oc login  --token $token  https://api.crc.testing:6443
+
+pod=$(oc get pods | fgrep postgresql | awk '{print $1}')
+oc exec $pod -- ls /
+
