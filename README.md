@@ -516,3 +516,9 @@ oc login  --token $token  https://api.crc.testing:6443
 pod=$(oc get pods | fgrep $sampleimage | awk '{print $1}')
 oc exec $pod -- ls /
 ```
+
+# Keycloak
+
+```bash
+oc new-project keycloak && oc process -f ./keycloak.yaml     -p KC_BOOTSTRAP_ADMIN_USERNAME=admin     -p KC_BOOTSTRAP_ADMIN_PASSWORD=admin  -p HOSTNAME=localhost   -p NAMESPACE=keycloak  | oc create -f -
+```
