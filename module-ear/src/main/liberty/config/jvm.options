@@ -2,3 +2,4 @@
 -Dapp_name=MavenEarExample1
 -Dconfigenabled=CustomConfigSource1
 -Dmicroprofile.config.refresh.rate=30000
+-Duser.language=en
