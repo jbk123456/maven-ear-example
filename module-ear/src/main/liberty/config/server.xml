@@ -35,6 +35,18 @@
 	<library id="shared_libs" filesetDir="${sharedLibsDirectory}" includes="*.jar"/>
 	<enterpriseApplication location="${artifactId}.ear">
 		<classloader commonLibraryRef="shared_libs" delegation="parentLast"/>
+
+<application-bnd>
+	  <security-role name="master">
+          <group access-id="master" />
+      </security-role>
+
+	  <security-role name="webuser">
+          <special-subject type="ALL_AUTHENTICATED_USERS" />
+      </security-role>
+</application-bnd> 
+
+
 	</enterpriseApplication>
 
   <remoteFileAccess>
