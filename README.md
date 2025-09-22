@@ -551,7 +551,7 @@ security.xml:
 	signatureAlgorithm="RS256"
 	scope="openid email profile address"
     inboundPropagation="supported"
-    userIdentifier="name"
+    userIdentifier="email"
     groupIdentifier="sofy-groups"
     includeIdTokenInSubject="true"
     mapIdentityToRegistryUser="false"
@@ -569,26 +569,43 @@ security.xml:
 keycloak anlegen:
 
 ```bash
-
-oc new-project keycloak && oc process -f keycloak.yaml     -p KC_BOOTSTRAP_ADMIN_USERNAME=admin     -p KC_BOOTSTRAP_ADMIN_PASSWORD=admin  -p HOSTNAME=localhost   -p NAMESPACE=keycloak  | oc create -f -
+oc new-project keycloak && oc process -f kubernetes/keycloak.yaml  -p KC_BOOTSTRAP_ADMIN_USERNAME=admin  -p KC_BOOTSTRAP_ADMIN_PASSWORD=admin   -p NAMESPACE=keycloak  | oc create -f -
 ...
-
-Danach "openliberty-realm.json" erzeugen (in keycloak importieren). Erzeugt die user bob / bobpwd und alice / alicepwd. Die email ggf auf verified setzen.
 
 ca.key, ca.csr, intermeiate.key und intermediate.csr erzeugen:
+
 ```bash
- openssl req -x509 -sha512 -nodes -days 9999 -newkey rsa:4096 -keyout ca.key -out ca.cer -subj "/C=US/ST=California/L=Los Angeles/O=FreeKB/OU=IT/CN=FreekB Root CA"
- openssl req -new -key ca.key -out intermediate.csr -subj "/C=US/ST=California/L=Los Angeles/O=FreeKB/OU=IT/CN=FreeKB Intermediate CA"
- openssl x509 -req -sha512 -days 999 -set_serial 01 -CAkey ca.key -CA ca.cer -in intermediate.csr -out intermediate.cer
+CN="keycloak-keycloak.apps-crc.testing"
+openssl req -x509 -sha512 -nodes -days 9999 -newkey rsa:4096 -keyout kubernetes/ca.key -out kubernetes/ca.cer -subj "/C=US/ST=California/L=Los Angeles/O=FreeKB/OU=IT/CN=FreekB Root CA"
+openssl req -new -key kubernetes/ca.key -out kubernetes/intermediate.csr -subj "/C=US/ST=California/L=Los Angeles/O=FreeKB/OU=IT/CN=$CN"
+openssl x509 -req -sha512 -days 999 -set_serial 01 -CAkey kubernetes/ca.key -CA kubernetes/ca.cer -in kubernetes/intermediate.csr -out kubernetes/intermediate.cer
 ...
 
-Neue route "kc" ähnlich der "keycloak" route erzeugen, aber secure: edge termination, das intermediate.csr, den private key und das ca certificate angeen, speichern. Danach den key von localhost:443 prüfen, nach key speichern und in key.p12 importieren: 
+-Die route keycloak ändern: edge termination, das intermediate.csr, den private key und das ca certificate hinterlegen, speichern.
+- Danach "openliberty-realm.json" keycloak importieren. Erzeugt die user bob / bobpwd und alice / alicepwd. 
+- Die email ggf auf verified setzen.
+- Valid redirect urls auf * setzen
+
+
+key.p12 erzeugen lassen: 
 
 ```bash
 mvn clean io.openliberty.tools:liberty-maven-plugin:3.11.3:dev
-cd resources/security
-echo q | openssl s_client -showcerts -connect localhost:443
-# => nach key speichern
-keytool -importcert -file key -alias defaultSSLConfig -keystore key.p12 -storepass changeit
 ...
 
+server.cert hinterlegen:
+
+```bash
+
+host=keycloak-keycloak.apps-crc.testing
+echo q | openssl s_client -showcerts -connect $host:443 | sed -n '/-----BEGIN CERTIFICATE-----/,/----END CERTIFICATE-----/p' | sed '/END/q' >kubernetes/server.cert
+keytool -importcert -file kubernetes/server.cert -alias  defaultSSLConfig -keystore 'module-ear/target/liberty/wlp/usr/servers/defaultServer/resources/security/key.p12'  -storepass changeit -noprompt
+...
+
+Liberty starten und einloggen:
+
+```bash
+mvn io.openliberty.tools:liberty-maven-plugin:3.11.3:dev
+...
+
+http://localhost:9080/webui/
