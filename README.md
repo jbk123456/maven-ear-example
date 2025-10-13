@@ -60,7 +60,7 @@ strings -- 'module-ejb/target/classes/com/example/service/impl/ExampleService.cl
 Start with:
 
 ```bash
-mvn clean io.openliberty.tools:liberty-maven-plugin:3.10.3:dev
+mvn clean io.openliberty.tools:liberty-maven-plugin:3.11.3:dev
 ```
 or:
 
@@ -493,3 +493,119 @@ oc apply -f kubernetes.yaml
 )
 
 ```
+
+# Service Account
+
+```bash
+instance=https://api.crc.testing:6443
+project=serviceaccountdemo
+user=bender
+sampleimage=bash
+expire=4294967296s
+
+oc login -u developer $instance
+oc new-project $project
+oc new-app $sampleimage
+
+oc create serviceaccount $user
+token=$(oc create token $user --namespace $project --duration=$expire|tee $user.token)
+
+oc create rolebinding $user-admin-rolebinding --clusterrole admin --serviceaccount $project:$user
+oc login  --token $token  https://api.crc.testing:6443
+
+pod=$(oc get pods | fgrep $sampleimage | awk '{print $1}')
+oc exec $pod -- ls /
+```
+
+#  ssl key
+
+root certificate
+
+```bash
+openssl req -x509 -sha512 -nodes -days 9999 -newkey rsa:4096 -keyout ca.key -out ca.cer -subj "/C=US/ST=California/L=Los Angeles/O=FreeKB/OU=IT/CN=FreekB Root CA"
+
+```
+intermediate certificate signing request
+
+```bash
+openssl req -new -key ca.key -out intermediate.csr -subj "/C=US/ST=California/L=Los Angeles/O=FreeKB/OU=IT/CN=FreeKB Intermediate CA"
+
+```
+
+intermediate certificate signing request
+
+```bash
+openssl x509 -req -sha512 -days 999 -set_serial 01 -CAkey ca.key -CA ca.cer -in intermediate.csr -out intermediate.cer
+
+```
+
+security.xml:
+
+```security.xml
+<featureManager>
+    <feature>openidConnectClient-1.0</feature>
+</featureManager>
+...
+
+<openidConnectClient id="RP"
+	signatureAlgorithm="RS256"
+	scope="openid email profile address"
+    inboundPropagation="supported"
+    userIdentifier="email"
+    groupIdentifier="sofy-groups"
+    includeIdTokenInSubject="true"
+    mapIdentityToRegistryUser="false"
+    clientId="sample-openliberty-keycloak"
+    clientSecret="x4fRVAhk49TKDqVlzIt4q9oh8DSWfePt"
+    redirectToOriginalResource = "true"
+    httpsRequired="false"
+    discoveryEndpointUrl="https://localhost/realms/openliberty/.well-known/openid-configuration">
+</openidConnectClient>
+<oidcClientWebapp contextPath="/Callback" />
+	
+	
+```
+
+keycloak anlegen:
+
+```bash
+oc new-project keycloak && oc process -f kubernetes/keycloak.yaml  -p KC_BOOTSTRAP_ADMIN_USERNAME=admin  -p KC_BOOTSTRAP_ADMIN_PASSWORD=admin   -p NAMESPACE=keycloak  | oc create -f -
+...
+
+ca.key, ca.csr, intermeiate.key und intermediate.csr erzeugen:
+
+```bash
+CN="keycloak-keycloak.apps-crc.testing"
+openssl req -x509 -sha512 -nodes -days 9999 -newkey rsa:4096 -keyout kubernetes/ca.key -out kubernetes/ca.cer -subj "/C=US/ST=California/L=Los Angeles/O=FreeKB/OU=IT/CN=FreekB Root CA"
+openssl req -new -key kubernetes/ca.key -out kubernetes/intermediate.csr -subj "/C=US/ST=California/L=Los Angeles/O=FreeKB/OU=IT/CN=$CN"
+openssl x509 -req -sha512 -days 999 -set_serial 01 -CAkey kubernetes/ca.key -CA kubernetes/ca.cer -in kubernetes/intermediate.csr -out kubernetes/intermediate.cer
+...
+
+-Die route keycloak ändern: edge termination, das intermediate.csr, den private key und das ca certificate hinterlegen, speichern.
+- Danach "openliberty-realm.json" keycloak importieren. Erzeugt die user bob / bobpwd und alice / alicepwd. 
+- Die email ggf auf verified setzen.
+- Valid redirect urls auf * setzen
+
+
+key.p12 erzeugen lassen: 
+
+```bash
+mvn clean io.openliberty.tools:liberty-maven-plugin:3.11.3:dev
+...
+
+server.cert hinterlegen:
+
+```bash
+
+host=keycloak-keycloak.apps-crc.testing
+echo q | openssl s_client -showcerts -connect $host:443 | sed -n '/-----BEGIN CERTIFICATE-----/,/----END CERTIFICATE-----/p' | sed '/END/q' >kubernetes/server.cert
+keytool -importcert -file kubernetes/server.cert -alias  defaultSSLConfig -keystore 'module-ear/target/liberty/wlp/usr/servers/defaultServer/resources/security/key.p12'  -storepass changeit -noprompt
+...
+
+Liberty starten und einloggen:
+
+```bash
+mvn io.openliberty.tools:liberty-maven-plugin:3.11.3:dev
+...
+
+http://localhost:9080/webui/

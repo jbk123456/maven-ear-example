@@ -32,7 +32,19 @@
          <scope>provided</scope>
 
       </dependency>
-      <!--JSF 2.2-->
+      <dependency>
+         <groupId>javax.json</groupId>
+         <artifactId>javax.json-api</artifactId>
+         <version>1.0</version>
+      </dependency>
+
+      <dependency>
+         <groupId>org.glassfish</groupId>
+         <artifactId>javax.json</artifactId>
+         <version>1.0</version>
+      </dependency>
+
+    <!--JSF 2.2-->
      
       <dependency>
          <groupId>org.glassfish</groupId>
@@ -56,6 +68,36 @@
          <groupId>com.google.code.gson</groupId>
          <artifactId>gson</artifactId>
       </dependency>
+
+   
+ <!--https://www.ibm.com/docs/en/wasdtfe?topic=suye-configuring-dependency-pom-files-that-emulate-classpath-specific-websphere-runtime-environments-->
+
+<!-- <dependency>
+      <groupId>net.wasdev.maven.tools.targets</groupId>
+      <artifactId>liberty-target</artifactId>
+      <version>RELEASE</version>
+      <type>pom</type>
+      <scope>provided</scope>
+</dependency> -->
+
+<dependency>
+      <groupId>com.ibm.websphere.appserver.api</groupId>
+      <artifactId>com.ibm.websphere.appserver.api.oidc</artifactId>
+      <version>1.0.22</version>
+      <scope>provided</scope>
+</dependency>
+<dependency>
+      <groupId>com.ibm.websphere.appserver.api</groupId>
+      <artifactId>com.ibm.websphere.appserver.api.oauth</artifactId>
+      <version>1.2.22</version>
+      <scope>provided</scope>
+</dependency>
+<dependency>
+      <groupId>com.ibm.websphere.appserver.api</groupId>
+      <artifactId>com.ibm.websphere.appserver.api.basics</artifactId>
+      <version>1.2.16</version>
+      <scope>provided</scope>
+</dependency>
 
    </dependencies>
 
