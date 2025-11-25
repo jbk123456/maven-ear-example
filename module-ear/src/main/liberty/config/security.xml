@@ -22,13 +22,7 @@
 	  disableLtpaCookie="true"
 	  headerName="jwt"
 	  pkceCodeChallengeMethod="S256"
-	  
-	  issuerIdentifier="http://keycloak-keycloak.apps-crc.testing/realms/openliberty"
-	  authorizationEndpointUrl="http://keycloak-keycloak.apps-crc.testing/realms/openliberty/protocol/openid-connect/auth"
-	  tokenEndpointUrl="http://keycloak-keycloak.apps-crc.testing/realms/openliberty/protocol/openid-connect/token"
-	  jwkEndpointUrl="http://keycloak-keycloak.apps-crc.testing/realms/openliberty/protocol/openid-connect/certs"
-	  userInfoEndpointUrl="http://keycloak-keycloak.apps-crc.testing/realms/openliberty/protocol/openid-connect/userinfo">
+	  discoveryEndpointUrl="https://keycloak-keycloak.apps-crc.testing/realms/openliberty/.well-known/openid-configuration">
   </openidConnectClient>
-  	  <!-- discoveryEndpointUrl="https://keycloak-keycloak.apps-crc.testing/realms/openliberty/.well-known/openid-configuration" -->
   <oidcClientWebapp contextPath="/Callback" />
 </server>
