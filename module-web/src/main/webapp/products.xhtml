@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+   <title>Products - Maven EAR Example</title>
+   <meta charset="utf-8"/>
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+</h:head>
+<h:body>
+   <div class="container">
+      <h1>Product Catalog</h1>
+      
+      <nav aria-label="breadcrumb">
+         <ol class="breadcrumb">
+            <li class="breadcrumb-item"><h:link outcome="index" value="Home"/></li>
+            <li class="breadcrumb-item active">Products</li>
+         </ol>
+      </nav>
+
+      <div class="panel panel-success">
+         <div class="panel-heading">
+            <h3 class="panel-title">Available Products</h3>
+         </div>
+         <div class="panel-body">
+            <h:dataTable value="#{productBean.products}" var="product" 
+                         styleClass="table table-striped table-bordered table-hover">
+               <h:column>
+                  <f:facet name="header">Product ID</f:facet>
+                  #{product.id}
+               </h:column>
+               <h:column>
+                  <f:facet name="header">Product Name</f:facet>
+                  <strong>#{product.name}</strong>
+               </h:column>
+               <h:column>
+                  <f:facet name="header">Category</f:facet>
+                  <span class="label label-info">#{product.category}</span>
+               </h:column>
+               <h:column>
+                  <f:facet name="header">Price</f:facet>
+                  <h:outputText value="#{product.price}" styleClass="text-success">
+                     <f:convertNumber type="currency" currencySymbol="$"/>
+                  </h:outputText>
+               </h:column>
+               <h:column>
+                  <f:facet name="header">Stock</f:facet>
+                  <h:outputText value="#{product.stock}" 
+                                styleClass="#{product.stock > 10 ? 'text-success' : 'text-danger'}"/>
+               </h:column>
+               <h:column>
+                  <f:facet name="header">Status</f:facet>
+                  <span class="label #{product.stock > 0 ? 'label-success' : 'label-danger'}">
+                     #{product.stock > 0 ? 'In Stock' : 'Out of Stock'}
+                  </span>
+               </h:column>
+            </h:dataTable>
+         </div>
+         <div class="panel-footer">
+            <small>Total Products: #{productBean.products.size()}</small>
+         </div>
+      </div>
+
+      <div class="well">
+         <h:link outcome="index" value="← Back to Home" styleClass="btn btn-default"/>
+      </div>
+   </div>
+</h:body>
+</html>

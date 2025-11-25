@@ -4,14 +4,12 @@
     <feature>openidConnectClient-1.0</feature>
   </featureManager>
 
-  <ltpa />
-  <ltpa keysFileName="resources/security/ltpa.keys" keysPassword="${password/ltpa}" expiration="30m"/>
-  <ssl id="defaultSSLConfig"  trustDefaultCerts="true" location="resources/security/key.p12" password="${password/ssl}"/>
+  <ssl id="defaultSSLConfig" trustDefaultCerts="true" verifyHostname="false" location="resources/security/key.p12" password="${password/ssl}"/>
 
   <openidConnectClient
 	  id="RP"
 	  signatureAlgorithm="RS256"
-	  scope="openid email profile address"
+	  scope="openid email profile"
 	  inboundPropagation="supported"
 	  userIdentifier="email"
 	  groupIdentifier="groups"
@@ -19,13 +17,18 @@
 	  mapIdentityToRegistryUser="false"
 	  clientId="sample-openliberty-keycloak"
 	  clientSecret="x4fRVAhk49TKDqVlzIt4q9oh8DSWfePt"
-	  redirectToOriginalResource = "true"
+	  redirectToOriginalResource="true"
 	  httpsRequired="false"
-	   disableLtpaCookie="true"
- headerName="jwt"
-
-	  discoveryEndpointUrl="https://keycloak-keycloak.apps-crc.testing/realms/openliberty/.well-known/openid-configuration">
+	  disableLtpaCookie="true"
+	  headerName="jwt"
+	  pkceCodeChallengeMethod="S256"
+	  
+	  issuerIdentifier="http://keycloak-keycloak.apps-crc.testing/realms/openliberty"
+	  authorizationEndpointUrl="http://keycloak-keycloak.apps-crc.testing/realms/openliberty/protocol/openid-connect/auth"
+	  tokenEndpointUrl="http://keycloak-keycloak.apps-crc.testing/realms/openliberty/protocol/openid-connect/token"
+	  jwkEndpointUrl="http://keycloak-keycloak.apps-crc.testing/realms/openliberty/protocol/openid-connect/certs"
+	  userInfoEndpointUrl="http://keycloak-keycloak.apps-crc.testing/realms/openliberty/protocol/openid-connect/userinfo">
   </openidConnectClient>
-  
+  	  <!-- discoveryEndpointUrl="https://keycloak-keycloak.apps-crc.testing/realms/openliberty/.well-known/openid-configuration" -->
   <oidcClientWebapp contextPath="/Callback" />
 </server>

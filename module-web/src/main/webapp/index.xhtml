@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html">
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
 <h:head>
    <title>Maven ear example</title>
    <meta charset="utf-8"/>
@@ -8,11 +10,49 @@
 </h:head>
 <h:body>
    <div class="container">
-      <h1>maven ear example</h1>
+      <h1>Maven EAR Example</h1>
+      
+      <div class="alert alert-info">
+         <strong>Welcome!</strong> #{helloWorld.message}
+      </div>
 
-       #{helloWorld.message}
+      <div class="panel panel-primary">
+         <div class="panel-heading">
+            <h3 class="panel-title">Employee List</h3>
+         </div>
+         <div class="panel-body">
+            <h:dataTable value="#{employeeBean.employees}" var="emp" 
+                         styleClass="table table-striped table-bordered table-hover">
+               <h:column>
+                  <f:facet name="header">ID</f:facet>
+                  #{emp.id}
+               </h:column>
+               <h:column>
+                  <f:facet name="header">Name</f:facet>
+                  #{emp.name}
+               </h:column>
+               <h:column>
+                  <f:facet name="header">Department</f:facet>
+                  #{emp.department}
+               </h:column>
+               <h:column>
+                  <f:facet name="header">Email</f:facet>
+                  #{emp.email}
+               </h:column>
+               <h:column>
+                  <f:facet name="header">Salary</f:facet>
+                  <h:outputText value="#{emp.salary}">
+                     <f:convertNumber type="currency" currencySymbol="$"/>
+                  </h:outputText>
+               </h:column>
+            </h:dataTable>
+         </div>
+      </div>
 
-      <a href="rest/members/1">rest example</a>
+      <div class="btn-group" role="group">
+         <a href="rest/members/1" class="btn btn-info">REST API Example</a>
+         <h:link outcome="products" value="View Products" styleClass="btn btn-success"/>
+      </div>
    </div>
 </h:body>
 </html>
