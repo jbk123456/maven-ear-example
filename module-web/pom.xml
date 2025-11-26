@@ -94,11 +94,29 @@
          <scope>compile</scope>
       </dependency>
 
-  <!--     <dependency>
+      <dependency>
 		<groupId>org.richfaces</groupId>
 		<artifactId>richfaces-page-fragments</artifactId>
       <scope>compile</scope>
-	</dependency>   -->
+      <exclusions>
+         <exclusion>
+            <groupId>org.jboss.arquillian.graphene</groupId>
+            <artifactId>graphene-webdriver</artifactId>
+         </exclusion>
+         <exclusion>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+         </exclusion>
+         <exclusion>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-api</artifactId>
+         </exclusion>
+         <exclusion>
+            <groupId>org.jboss.arquillian.extension</groupId>
+            <artifactId>arquillian-phantom-driver</artifactId>
+         </exclusion>
+      </exclusions>
+	</dependency>  
 
       <dependency>
          <groupId>com.google.code.gson</groupId>
