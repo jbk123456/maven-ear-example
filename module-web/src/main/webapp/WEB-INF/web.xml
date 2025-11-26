@@ -11,6 +11,12 @@
         <param-value>Development</param-value>
     </context-param>
 
+    <!-- TODO: -->
+    <context-param>
+        <param-name>javax.faces.expressionFactory</param-name>
+        <param-value>com.sun.el.ExpressionFactoryImpl</param-value>
+    </context-param>
+
     <login-config>
         <auth-method>BASIC</auth-method>
         <realm-name>BasicRealm</realm-name>
@@ -63,6 +69,10 @@
     <welcome-file-list>
         <welcome-file>index.xhtml</welcome-file>
     </welcome-file-list>
-
+ 
+    <!-- TODO: -->
+    <listener> 
+        <listener-class>com.sun.faces.config.ConfigureListener</listener-class>
+    </listener>
 
 </web-app>

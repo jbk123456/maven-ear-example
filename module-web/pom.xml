@@ -44,30 +44,67 @@
          <version>1.0</version>
       </dependency>
 
-    <!--JSF 2.2-->
+    <!--JSF 2.2 with custom EL and JSP-->
      
       <dependency>
-         <groupId>org.glassfish</groupId>
-         <artifactId>javax.faces</artifactId>
+         <groupId>com.sun.faces</groupId>
+         <artifactId>jsf-api</artifactId>
+         <scope>runtime</scope>
+      </dependency>
+      
+      <dependency>
+         <groupId>com.sun.faces</groupId>
+         <artifactId>jsf-impl</artifactId>
+         <scope>runtime</scope>
       </dependency>
 
+      <!-- Custom EL implementation -->
+      <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>el-impl</artifactId>
+            <scope>runtime</scope>
+         </dependency>
+       <dependency>
+            <groupId>javax.el</groupId>
+            <artifactId>el-api</artifactId>
+            <scope>runtime</scope>
+         </dependency>
+       
+       <!-- JSP implementation (required since jsp-2.3 feature is removed) -->
+       <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>javax.servlet.jsp</artifactId>
+            <version>2.3.2</version>
+            <scope>runtime</scope>
+         </dependency>
+       <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>javax.servlet.jsp-api</artifactId>
+            <version>2.3.1</version>
+            <scope>provided</scope>
+         </dependency>
       <dependency>
          <groupId>org.richfaces</groupId>
          <artifactId>richfaces</artifactId>
+         <scope>compile</scope>
       </dependency>
       <dependency>
          <groupId>org.richfaces</groupId>
          <artifactId>richfaces-core</artifactId>
+         <scope>compile</scope>
       </dependency>
-      <!-- <dependency>
+
+  <!--     <dependency>
 		<groupId>org.richfaces</groupId>
 		<artifactId>richfaces-page-fragments</artifactId>
+      <scope>compile</scope>
 	</dependency>   -->
 
       <dependency>
          <groupId>com.google.code.gson</groupId>
          <artifactId>gson</artifactId>
       </dependency>
+      
 
    
  <!--https://www.ibm.com/docs/en/wasdtfe?topic=suye-configuring-dependency-pom-files-that-emulate-classpath-specific-websphere-runtime-environments-->
