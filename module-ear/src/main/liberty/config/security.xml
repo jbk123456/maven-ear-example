@@ -20,7 +20,7 @@
 	  redirectToOriginalResource="true"
 	  httpsRequired="false"
 	  disableLtpaCookie="true"
-	  disableHttpsessionCookie="true"
+	  disableHttpsessionCookie="false"
 	  reAuthnOnAccessTokenExpire="true"
 	  reAuthnCushion="30"
 	  headerName="jwt"
