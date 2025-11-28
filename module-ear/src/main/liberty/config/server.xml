@@ -12,6 +12,7 @@
 
 		<feature>jaxb-2.2</feature>
 		<feature>appSecurity-2.0</feature>
+		<feature>jwt-1.0</feature>
 		<feature>localConnector-1.0</feature>
 		<feature>restConnector-2.0</feature>
 		<feature>mpConfig-1.3</feature>
@@ -33,6 +34,10 @@
 	<!--set in pom.xml otherwise use default-->
 	<include location="security.xml" onConflict="merge"/>
 	<httpEndpoint httpPort="${http.port}" httpsPort="${https.port}" id="defaultHttpEndpoint" host="*"/>
+	
+	<!-- Disable HTTP session cookies to use JWT-only authentication -->
+	<httpSession cookiesEnabled="true"/>
+	
 	<library id="shared_libs" filesetDir="${sharedLibsDirectory}" includes="*.jar"/>
 	<enterpriseApplication location="${artifactId}.ear">
 		<classloader commonLibraryRef="shared_libs" delegation="parentLast"/>

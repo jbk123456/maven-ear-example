@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>OIDC Session Management</title>
+</head>
+<body onload="javascript:startChecking()">
+    <!-- Invisible iframe that monitors the OpenID Connect Provider session -->
+    <iframe id="iframeOP" 
+            src="https://keycloak-keycloak.apps-crc.testing/realms/openliberty/protocol/openid-connect/auth/check_session_iframe" 
+            frameborder="0" 
+            width="0" 
+            height="0"></iframe>
+</body>
+<script>
+    var targetOP = "https://keycloak-keycloak.apps-crc.testing";
+    
+    window.addEventListener("message", receiveMessage, false);
+    
+    function startChecking() {
+        checkStatus();
+        // Check status every 60 seconds
+        setInterval(checkStatus, 1000*60);
+    }
+    
+    function getCookieValue(cookieName) {
+        var name = cookieName + "=";
+        var cookies = document.cookie.split(';');
+        if (!cookies) {
+            return null;
+        }
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            if (cookie.indexOf(name) == 0) {
+                return cookie.substring(name.length, cookie.length);
+            }
+        }
+        return null;
+    }
+    
+    function checkStatus() {
+        var client = "sample-openliberty-keycloak";
+        var sessionState = getCookieValue("session_state");
+        if (!sessionState) {
+            console.log("No session state found");
+            return;
+        }
+        var text = client + " " + sessionState;
+        var iframe = document.getElementById("iframeOP");
+        if (iframe && iframe.contentWindow) {
+            iframe.contentWindow.postMessage(text, targetOP);
+        }
+    }
+    
+    function receiveMessage(event) {
+        if (event.origin !== targetOP) {
+            // Origin did not come from the OP; this message must be rejected
+            return;
+        }
+        if (event.data === "unchanged") {
+            // User is still logged in to the OP
+            console.log("User is still logged in to the OP");
+        } else if (event.data === "changed") {
+            // User has logged out of the OP
+            console.log("User has logged out of the OP - redirecting to logout");
+            // Redirect to application logout
+            window.top.location.href = "/webui/logout.xhtml";
+        }
+    }
+</script>
+</html>

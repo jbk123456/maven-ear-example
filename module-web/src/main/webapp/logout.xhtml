@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+   <title>Logged Out</title>
+   <meta charset="utf-8"/>
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+   <meta http-equiv="refresh" content="3;url=https://keycloak-keycloak.apps-crc.testing/realms/openliberty/protocol/openid-connect/logout?redirect_uri=#{request.scheme}://#{request.serverName}:#{request.serverPort}#{request.contextPath}/"/>
+</h:head>
+<h:body>
+   <div class="container">
+      <div class="jumbotron" style="margin-top: 50px;">
+         <h1>Logged Out</h1>
+         <p class="lead">You have been logged out from the application.</p>
+         <p>Redirecting to Keycloak logout...</p>
+         <hr/>
+         <p>
+            <a href="https://keycloak-keycloak.apps-crc.testing/realms/openliberty/protocol/openid-connect/logout?redirect_uri=#{request.scheme}://#{request.serverName}:#{request.serverPort}#{request.contextPath}/" 
+               class="btn btn-primary btn-lg">Click here if not redirected automatically</a>
+         </p>
+      </div>
+   </div>
+</h:body>
+</html>

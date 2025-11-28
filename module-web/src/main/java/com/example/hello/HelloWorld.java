@@ -46,6 +46,7 @@ public class HelloWorld {
    
 
       HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+System.out.println("Create a new session" + request.getSession().isNew());
 
      Principal prx2=pr=request.getUserPrincipal();
 Set<WSCredential> l= new  HashSet<>();

@@ -19,6 +19,7 @@ public class ApplicationConfig extends Application {
     public Set<Class<?>> getClasses() {
         Set<Class<?>> classes = new HashSet<Class<?>>();
         classes.add(MemoryConfigApi.class);
+        classes.add(MemberResource.class);
         return classes;
     }
 }

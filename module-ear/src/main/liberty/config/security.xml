@@ -20,6 +20,9 @@
 	  redirectToOriginalResource="true"
 	  httpsRequired="false"
 	  disableLtpaCookie="true"
+	  disableHttpsessionCookie="true"
+	  reAuthnOnAccessTokenExpire="true"
+	  reAuthnCushion="30"
 	  headerName="jwt"
 	  pkceCodeChallengeMethod="S256"
 	  discoveryEndpointUrl="https://keycloak-keycloak.apps-crc.testing/realms/openliberty/.well-known/openid-configuration">

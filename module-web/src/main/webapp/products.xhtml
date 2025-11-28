@@ -27,7 +27,21 @@
             <h3 class="panel-title">Available Products</h3>
          </div>
          <div class="panel-body">
-            <h:dataTable value="#{productBean.products}" var="product" 
+            <h:form>
+               <div class="btn-group" role="group" style="margin-bottom: 15px;">
+                  <h:commandButton value="Show All Products" 
+                                   action="#{productBean.toggleView}" 
+                                   styleClass="btn btn-primary #{productBean.showAll ? 'active' : ''}">
+                     <f:ajax render="@form"/>
+                  </h:commandButton>
+                  <h:commandButton value="Show In Stock Only" 
+                                   action="#{productBean.toggleView}" 
+                                   styleClass="btn btn-primary #{!productBean.showAll ? 'active' : ''}">
+                     <f:ajax render="@form"/>
+                  </h:commandButton>
+               </div>
+            
+            <h:dataTable value="#{productBean.filteredProducts}" var="product" 
                          styleClass="table table-striped table-bordered table-hover">
                <h:column>
                   <f:facet name="header">Product ID</f:facet>
@@ -59,9 +73,10 @@
                   </span>
                </h:column>
             </h:dataTable>
+            </h:form>
          </div>
          <div class="panel-footer">
-            <small>Total Products: #{productBean.products.size()}</small>
+            <small>Showing #{productBean.filteredProducts.size()} of #{productBean.products.size()} products</small>
          </div>
       </div>
 
