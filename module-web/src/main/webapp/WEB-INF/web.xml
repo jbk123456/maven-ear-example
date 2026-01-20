@@ -48,18 +48,6 @@
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>
-
-    <!-- Inject a global JSF Ajax error handler into full HTML responses -->
-    <filter>
-        <filter-name>AjaxGlobalHandlerInjectionFilter</filter-name>
-        <filter-class>com.example.filter.AjaxGlobalHandlerInjectionFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>AjaxGlobalHandlerInjectionFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>FORWARD</dispatcher>
-    </filter-mapping>
     <servlet>
 
     <servlet-name>Resource Servlet</servlet-name>

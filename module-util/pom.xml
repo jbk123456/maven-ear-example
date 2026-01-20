@@ -20,6 +20,14 @@
          <artifactId>javaee-api</artifactId>
          <scope>provided</scope>
       </dependency>
+
+      <!-- Depend on module-api for FooService interface -->
+      <dependency>
+         <groupId>com.example</groupId>
+         <artifactId>api</artifactId>
+         <version>1.0-SNAPSHOT</version>
+         <scope>provided</scope>
+      </dependency>
       <!--JSF 2.2-->
  
       <dependency>
@@ -47,6 +55,22 @@
          <groupId>com.google.code.gson</groupId>
          <artifactId>gson</artifactId>
       </dependency>
+
+         <!-- IBM WAS AdminClient and ORB libraries -->
+         <dependency>
+            <groupId>com.ibm.websphere</groupId>
+            <artifactId>ws-admin-client</artifactId>
+            <version>9.0.0</version>
+            <scope>system</scope>
+            <systemPath>/opt/IBM/WebSphere/AppServer/runtimes/com.ibm.ws.admin.client_9.0.jar</systemPath>
+         </dependency>
+         <dependency>
+            <groupId>com.ibm.websphere</groupId>
+            <artifactId>ws-orb</artifactId>
+            <version>9.0.0</version>
+            <scope>system</scope>
+            <systemPath>/opt/IBM/WebSphere/AppServer/runtimes/com.ibm.ws.orb_9.0.jar</systemPath>
+         </dependency>
 
 
    </dependencies>

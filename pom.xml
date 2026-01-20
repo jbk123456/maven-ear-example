@@ -12,6 +12,7 @@
    <modules>
       <module>module-ejb</module>
       <module>module-web</module>
+      <module>module-api</module>
       <module>module-util</module>
       <module>module-ear</module>
    </modules>
@@ -23,7 +24,7 @@
       <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
       <org.richfaces.version>4.5.17.Final</org.richfaces.version>
-      <!-- <liberty.var.http.port>9080</liberty.var.http.port>
+      <!-- <liberty.var.http.port>9091</liberty.var.http.port>
       <liberty.var.https.port>9443</liberty.var.https.port> -->
 
       <liberty.var.sharedLibDir>{basedir}/shared/libs</liberty.var.sharedLibDir> <!-- used in

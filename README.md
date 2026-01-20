@@ -40,7 +40,7 @@ git clone git@github.com:jbk123456/maven-ear-example.git
 
 * enable automatic build. The maven console shall stay empty until a file is changed
 
-* edit ExampleService.java, change "i'm an ExampleService" to "I'm an ExampleService" and visit http://localhost:9080/webui (webuser / webuser)
+* edit ExampleService.java, change "i'm an ExampleService" to "I'm an ExampleService" and visit http://localhost:9091/webui (webuser / webuser)
 
 * output should start with "I'm an ExampleService"
 
@@ -69,7 +69,7 @@ mvn clean liberty:dev
 ```
 
 ### visit
-* local: [http://localhost:9080/webui/](http://localhost:9080/webui/)
+* local: [http://localhost:9091/webui/](http://localhost:9091/webui/)
 * credentials: admin/admin, webuser/webuser
 
 
@@ -172,7 +172,7 @@ user=openliberty
 
 mvn clean package
 s2i --loglevel=5  build . $user/$img  $app  --copy   # --exclude='(^|/)\.git(/|$)|pom\.xml' # --scripts-url=$s2i 
-docker run -it -p 9080:9080  -P $app
+docker run -it -p 9091:9091  -P $app
  
 ```
 
@@ -185,7 +185,7 @@ podman exec -it $(podman ps | sed 1d | awk '{print $1}') /bin/bash
 
 ### visit
 
-* container [http://localhost:9080/webui/](http://localhost:9080/webui/)
+* container [http://localhost:9091/webui/](http://localhost:9091/webui/)
 * credentials: admin/admin, webuser/webuser
 
 ### see also 
@@ -440,7 +440,7 @@ oc new-app . --name=$app --image=$user/$img  --build-env='MAVEN_ARGS=-e -s /home
 
 app_endpoint=maven-ear-example
 api_endpoint=$app_endpoint-webhooks-api
-oc expose service $app --port=9080 --path=/webui --name=$app_endpoint
+oc expose service $app --port=9091 --path=/webui --name=$app_endpoint
 oc expose service $app --port=9000 --path=/hooks --name=$api_endpoint
 ```
 ### test
@@ -608,4 +608,4 @@ Liberty starten und einloggen:
 mvn io.openliberty.tools:liberty-maven-plugin:3.11.3:dev
 ...
 
-http://localhost:9080/webui/
+http://localhost:9091/webui/

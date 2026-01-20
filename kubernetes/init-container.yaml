@@ -17,7 +17,7 @@ spec:
       - name: maven-ear-example-container
         image: image-registry.openshift-image-registry.svc:5000/demo-app-init-container/maven-ear-example
         ports:
-        - containerPort: 9080
+        - containerPort: 9091
         volumeMounts:
         - name: shared-volume
           mountPath: /var/www/app
@@ -43,7 +43,7 @@ spec:
     app: maven-ear-example
   ports:
   - protocol: TCP
-    port: 9080
+    port: 9091
 ---
 apiVersion: route.openshift.io/v1
 kind: Route

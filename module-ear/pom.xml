@@ -71,7 +71,7 @@
 						<password>admin</password>
 
 						<!-- check the 'server.xml' -->
-						<httpPort>9080</httpPort>
+						<httpPort>9091</httpPort>
 						<!-- <httpsPort>9443</httpsPort>  -->
 
 
@@ -107,6 +107,38 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-ear-plugin</artifactId>
 			</plugin>
+
+			<plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.6.0</version>
+        <executions>
+          <execution>
+            <id>copy-api-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>com.example</groupId>
+                  <artifactId>api</artifactId>
+                  <version>${project.version}</version>
+                  <outputDirectory>src/main/liberty/config/lib/</outputDirectory>
+                  <destFileName>api-1.0-SNAPSHOT.jar</destFileName>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>com.example</groupId>
+                  <artifactId>util</artifactId>
+                  <version>${project.version}</version>
+                  <outputDirectory>src/main/liberty/config/lib/</outputDirectory>
+                  <destFileName>util-1.0-SNAPSHOT.jar</destFileName>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
 		</plugins>
 
 

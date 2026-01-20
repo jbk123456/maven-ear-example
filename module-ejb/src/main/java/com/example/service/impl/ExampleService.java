@@ -1,19 +1,11 @@
 package com.example.service.impl;
 
 import java.util.Optional;
-import java.util.Properties;
-import java.util.function.Supplier;
-
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-
-import org.eclipse.microprofile.config.ConfigProvider;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import com.example.service.IExampleService;
-import com.example.service.IRemoteExampleService;
 import com.example.to.ExampleTO;
 
 @Stateless
@@ -29,120 +21,21 @@ public class ExampleService implements IExampleService {
 
         @Override
         public String whoAmI(ExampleTO to) {
-            //Gson gson = new Gson();
-            try {
-                String prefix = "corbaname:iiop:localhost:2809";
-                Properties p = new Properties();
-                p.put(Context.PROVIDER_URL, prefix);
-                InitialContext ic = new InitialContext(p);
-
-                String binding ;
-                binding = "java:global/application-ear-1.0-SNAPSHOT/com.example-firstbean-1.0-SNAPSHOT/RemoteExampleService!com.example.service.IRemoteExampleService";
-                //binding = "ejb/global/application-ear-1.0-SNAPSHOT/com.example-firstbean-1.0-SNAPSHOT/RemoteExampleService!com.example.service.IRemoteExampleService";
-                //binding = "application-ear-1.0-SNAPSHOT/com.example-firstbean-1.0-SNAPSHOT/RemoteExampleService!com.example.service.IRemoteExampleService";
-                String lookup = prefix + "#"+ toCorbaname(binding);
-                lookup = toCorbaname(binding);
-                lookup = (binding);
-                System.out.println("lookup:::"+lookup);
-                
-                Object ns = ic.lookup(lookup);
-                System.out.println("NS:::"+ns);
-                IRemoteExampleService rs = (IRemoteExampleService) ns;
-               // IRemoteExampleService rs = (IRemoteExampleService)PortableRemoteObject.narrow(ns, IRemoteExampleService.class);
-                System.out.println("calling IRemoteExampleService:::"+rs.whoAmI(to));
-
-            } catch (Throwable e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-                throw new IllegalArgumentException(e);
-            }
-            String testval = ConfigProvider.getConfig().getOptionalValue("testval", String.class).orElse("unknown");
-			String testrate = ConfigProvider.getConfig().getOptionalValue("testrate", String.class).orElse("unknown");
-System.out.println("value for microprofile.config.properties.testrate:::" + testrate);
-
-            return String.format("i'm %s and %s ", name.get(), testval);
-        }
-        private static String toCorbaname(String jndiName) {
-            // Escape . into %5C%2E (\.) since it's an INS naming delimiter
-            // For example, sca.sample.StockQuote --->
-            // sca%5C%2Esample%5C%2EStockQuote/StockQuote
-            return replace(encode2396(jndiName), ".", "%5C%2E");
-        }
-            /**
-         * The character escape rules for the stringified name portion of an
-         * corbaname are: US-ASCII alphanumeric characters are not escaped.
-         * Characters outside this range are escaped, except for the following: ; / : ? @ & = + $ , - _ . ! ~ * ' ( )
-         * corbaname Escape Mechanism The percent '%' character is used as an
-         * escape. If a character that requires escaping is present in a name
-         * component it is encoded as two hexadecimal digits following a "%"
-         * character to represent the octet. (The first hexadecimal character
-         * represent the highorder nibble of the octet, the second hexadecimal
-         * character represents the low-order nibble.) If a '%' is not followed by
-         * two hex digits, the stringified name is syntactically invalid.
-         * @param s
-         * @return RFC2396-encoded stringified name
-         */
-        static String encode2396(String s) {
-            if (s == null) {
-                return null;
-            }
-            StringBuffer encoded = new StringBuffer(s);
-            for (int i = 0; i < encoded.length(); i++) {
-                char c = encoded.charAt(i);
-                if (RFC2396.indexOf(c) == -1) {
-                    encoded.setCharAt(i, '%');
-                    char[] ac = Integer.toHexString(c).toCharArray();
-                    if (ac.length == 2) {
-                        encoded.insert(i + 1, ac);
-                    } else if (ac.length == 1) {
-                        encoded.insert(i + 1, '0');
-                        encoded.insert(i + 2, ac[0]);
+                // Call FooService via ServiceLoader
+                try {
+                    java.util.ServiceLoader<com.example.foo.FooService> loader = java.util.ServiceLoader.load(com.example.foo.FooService.class);
+                    com.example.foo.FooService foo = loader.iterator().hasNext() ? loader.iterator().next() : null;
+                    if (foo != null) {
+                        // Example call, parameters should be set as needed
+                        String result = foo.callMBean("localhost", "8880", "was", "was123", "your.mbean:name=Example", "yourOperation", new Object[]{}, new String[]{});
+                        return "FooService result: " + result;
                     } else {
-                        throw new IllegalArgumentException("Invalid character '" + c + "' in \"" + s + "\"");
+                        return "FooService implementation not found";
                     }
-                    i += 2; // NOPMD
+                } catch (Exception e) {
+                    return "Error calling FooService: " + e.getMessage();
                 }
-            }
-            return encoded.toString();
+  
         }
-        private static final String RFC2396 =
-            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789;/:?@&=+$,-_.!~*'()";
-        /**
-         * Replace substrings
-         * 
-         * @param source The source string.
-         * @param match The string to search for within the source string.
-         * @param replace The replacement for any matching components.
-         * @return
-         */
-        private static String replace(String source, String match, String replace) {
-            int index = source.indexOf(match, 0);
-            if (index >= 0) {
-    
-                // We have at least one match, so got to do the
-                // work...
-    
-                StringBuffer result = new StringBuffer(source.length() + 16);
-                int matchLength = match.length();
-                int startIndex = 0;
-    
-                while (index >= 0) {
-                    result.append(source.substring(startIndex, index));
-                    result.append(replace);
-                    startIndex = index + matchLength;
-                    index = source.indexOf(match, startIndex);
-                }
-    
-                // Grab the last piece, if any...
-                if (startIndex < source.length()) {
-                    result.append(source.substring(startIndex));
-                }
-    
-                return result.toString();
-    
-            } else {
-                // No matches, just return the source...
-                return source;
-            }
-        }
+   
 }
