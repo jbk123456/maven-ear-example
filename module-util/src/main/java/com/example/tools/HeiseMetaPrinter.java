@@ -1,15 +1,14 @@
 package com.example.tools;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.time.Duration;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 import java.security.KeyStore;
@@ -35,30 +34,38 @@ public final class HeiseMetaPrinter {
     }
 
     private static String fetchHtml(String url, String trustStorePath, String trustStorePassword) throws Exception {
-        HttpClient.Builder clientBuilder = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(10))
-                .followRedirects(HttpClient.Redirect.NORMAL)
-                ;
-
-        if (trustStorePath != null && !trustStorePath.isBlank()) {
+        URL urlObj = new URL(url);
+        HttpsURLConnection connection = (HttpsURLConnection) urlObj.openConnection();
+        
+        if (trustStorePath != null && !trustStorePath.isEmpty()) {
             SSLContext sslContext = buildSslContext(trustStorePath, trustStorePassword);
-            clientBuilder.sslContext(sslContext);
+            connection.setSSLSocketFactory(sslContext.getSocketFactory());
         }
-
-        HttpClient client = clientBuilder.build();
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .timeout(Duration.ofSeconds(15))
-                .header("User-Agent", "maven-ear-example/1.0")
-                .GET()
-                .build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        if (response.statusCode() < 200 || response.statusCode() >= 300) {
-            throw new IllegalStateException("Unexpected HTTP status: " + response.statusCode());
+        
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("User-Agent", "maven-ear-example/1.0");
+        connection.setConnectTimeout(10000);
+        connection.setReadTimeout(15000);
+        connection.setInstanceFollowRedirects(true);
+        
+        int statusCode = connection.getResponseCode();
+        if (statusCode < 200 || statusCode >= 300) {
+            throw new IllegalStateException("Unexpected HTTP status: " + statusCode);
         }
-        return response.body();
+        
+        StringBuilder html = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+        try {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                html.append(line).append("\n");
+            }
+        } finally {
+            reader.close();
+        }
+        connection.disconnect();
+        
+        return html.toString();
     }
 
     private static Map<String, String> extractMeta(String html) {
