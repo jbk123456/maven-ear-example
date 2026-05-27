@@ -1,0 +1,40 @@
+[INFO] Running maven-ear-plugin:generate-application-xml
+[INFO] Generating application.xml
+[INFO] Running maven-resources-plugin:resources
+[INFO] skip non existing resourceDirectory C:\dev\git-repos\maven-ear-example\module-ear\src\main\resources
+[INFO] Running liberty:create
+[INFO] CWWKM2102I: Using artifact based assembly archive : io.openliberty:openliberty-kernel:null:26.0.0.5:zip.
+[INFO] CWWKM2102I: Using installDirectory : C:\dev\git-repos\maven-ear-example\module-ear\target\liberty\wlp.
+[INFO] CWWKM2102I: Using serverName : defaultServer.
+[INFO] CWWKM2102I: Using serverDirectory : C:\dev\git-repos\maven-ear-example\module-ear\target\liberty\wlp\usr\servers\defaultServer.
+[INFO] CWWKM2112I: Re-using previously installed assembly.
+[INFO] Copying 1 file to C:\dev\git-repos\maven-ear-example\module-ear\target\liberty\wlp\usr\servers\defaultServer
+[INFO] CWWKM2144I: Update server configuration file server.xml from C:\dev\git-repos\maven-ear-example\module-ear\src\main\liberty\config\server.xml.
+[INFO] CWWKM2185I: The liberty-maven-plugin configuration parameter "appsDirectory" value defaults to "dropins".
+[INFO] Running liberty:install-feature
+[INFO] Feature signature verify option: enforce
+[INFO] Parsing the server file for features and includes: defaultServer\server.xml
+[INFO] plugin listed esa: []
+
+[INFO] Resolving features: [jsp-2.3, ejb-3.2]
+[INFO] The features are already installed, so no action is needed.
+[INFO] Running liberty:deploy
+[INFO] Copying 1 file to C:\dev\git-repos\maven-ear-example\module-ear\target\liberty\wlp\usr\servers\defaultServer
+[INFO] CWWKM2144I: Update server configuration file server.xml from C:\dev\git-repos\maven-ear-example\module-ear\src\main\liberty\config\server.xml.
+[INFO] CWWKM2185I: The liberty-maven-plugin configuration parameter "appsDirectory" value defaults to "dropins".
+[INFO] Application configuration is not found in server.xml : application-ear-1.0-SNAPSHOT.ear
+[INFO] CWWKM2160I: Installing application application-ear-1.0-SNAPSHOT.ear.xml.
+[INFO] Copying 1 file to C:\dev\git-repos\maven-ear-example\module-ear\target\liberty\wlp\usr\servers\defaultServer
+[INFO] CWWKM2144I: Update server configuration file server.xml from C:\dev\git-repos\maven-ear-example\module-ear\src\main\liberty\config\server.xml.
+[INFO] CWWKM2185I: The liberty-maven-plugin configuration parameter "appsDirectory" value defaults to "dropins".
+[INFO] CWWKM2001I: Invoke command is ["C:\dev\git-repos\maven-ear-example\module-ear\target\liberty\wlp\bin\server.bat", run, defaultServer].
+[INFO] Launching defaultServer (Open Liberty 26.0.0.5/wlp-1.0.113.cl260520260430-1602) on Java HotSpot(TM) 64-Bit Server VM, version 1.8.0_202-b08 (en_US)
+[INFO] [AUDIT   ] CWWKE0001I: The server defaultServer has been launched.
+[INFO] [AUDIT   ] CWWKZ0058I: Monitoring dropins for applications.
+[INFO] [AUDIT   ] CWWKI0001I: The CORBA name server is now available at corbaloc:iiop:localhost:2809/NameService.
+[INFO] [WARNING ] TRAS3016W: The logs are being throttled due to high volume.
+[INFO] [AUDIT   ] CWWKZ0022W: Application application-ear-1.0-SNAPSHOT has not started in 30.004 seconds.
+[INFO] [AUDIT   ] CWWKF0012I: The server installed the following features: [ejb-3.2, ejbHome-3.2, ejbLite-3.2, ejbPersistentTimer-3.2, ejbRemote-3.2, el-3.0, jca-1.7, jdbc-4.1, jndi-1.0, jsp-2.3, mdb-3.2, servlet-3.1].
+[INFO] [AUDIT   ] CWWKF0011I: The defaultServer server is ready to run a smarter planet. The defaultServer server started in 33.718 seconds.
+[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://localhost:9080/maven-ear-example/
+[INFO] [AUDIT   ] CWWKZ0001I: Application application-ear-1.0-SNAPSHOT started in 45.303 seconds.
