@@ -3,8 +3,51 @@
 
     <!-- Enable features -->
     <featureManager>
-        <feature>jsp-2.3</feature>
+        <!-- the following is equivalent to <feature>webProfile-7.0</feature> -->
+        <feature>appClientSupport-1.0</feature>
+        <feature>appSecurity-2.0</feature>
+        <feature>batch-1.0</feature>
+        <feature>beanValidation-1.1</feature>
+        <feature>cdi-1.2</feature>
+        <feature>concurrent-1.0</feature>
+        <feature>distributedMap-1.0</feature> <!-- DynaCache -->
         <feature>ejb-3.2</feature>
+        <feature>ejbHome-3.2</feature>
+        <feature>ejbLite-3.2</feature>
+        <feature>ejbPersistentTimer-3.2</feature>
+        <feature>ejbRemote-3.2</feature>
+        <feature>el-3.0</feature>
+        <feature>j2eeManagement-1.1</feature>
+        <feature>jacc-1.5</feature>
+        <feature>jaspic-1.1</feature>
+        <feature>javaMail-1.5</feature>
+        <feature>jaxb-2.2</feature>
+        <feature>jaxrs-2.0</feature>
+        <feature>jaxrsClient-2.0</feature>
+        <feature>jaxws-2.2</feature>
+        <feature>jca-1.7</feature>
+        <feature>jcaInboundSecurity-1.0</feature>
+        <feature>jdbc-4.1</feature>
+        <feature>jms-2.0</feature>
+        <feature>jndi-1.0</feature>
+        <feature>jpa-2.1</feature>
+        <feature>jpaContainer-2.1</feature>
+        <feature>jsfContainer-2.2</feature>
+        <feature>json-1.0</feature>
+        <feature>jsonp-1.0</feature>
+        <feature>jsp-2.3</feature>
+        <feature>managedBeans-1.0</feature>
+        <feature>mdb-3.2</feature>
+        <feature>servlet-3.1</feature>
+        <feature>transportSecurity-1.0</feature>
+        <feature>wasJmsClient-2.0</feature>
+        <feature>wasJmsSecurity-1.0</feature>
+        <feature>websocket-1.1</feature>
+
+        <feature>mpConfig-1.4</feature>
+
+        <feature>restConnector-2.0</feature>
+        <feature>localConnector-1.0</feature>
     </featureManager>
 
     <!-- To access this server from a remote client add a host attribute to the following element, e.g. host="*" -->
@@ -17,4 +60,20 @@
 
     <!-- Default SSL configuration enables trust for default certificates from the Java runtime -->
     <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
+
+
+       <!-- Basic User Registry -->
+    <basicRegistry id="basic" realm="DefaultRealm">
+        <user name="adminUser" password="changeit" />
+    </basicRegistry>
+    
+    <!-- Enforce Authorization -->
+    <administrator-role>
+        <user>adminUser</user>
+    </administrator-role>
+
+    <applicationMonitor pollingRate="0" updateTrigger="polled" dropinsEnabled="true"/>
+    
+    <!-- Adjust how frequently the server checks for changes to the server.xml file itself -->
+    <config monitorInterval="0" updateTrigger="polled"/>
 </server>
