@@ -50,30 +50,33 @@
         <feature>localConnector-1.0</feature>
     </featureManager>
 
-    <!-- To access this server from a remote client add a host attribute to the following element, e.g. host="*" -->
+    <!-- To access this server from a remote client add a host attribute to the following element,
+    e.g. host="*" -->
     <httpEndpoint id="defaultHttpEndpoint"
-                  httpPort="9080"
-                  httpsPort="9443" />
+        httpPort="9080"
+        httpsPort="9443" />
 
     <!-- Automatically expand WAR files and EAR files -->
-    <applicationManager autoExpand="true"/>
+    <applicationManager autoExpand="false" />
 
     <!-- Default SSL configuration enables trust for default certificates from the Java runtime -->
     <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
 
 
-       <!-- Basic User Registry -->
+    <!-- Basic User Registry -->
     <basicRegistry id="basic" realm="DefaultRealm">
         <user name="adminUser" password="changeit" />
     </basicRegistry>
-    
+
     <!-- Enforce Authorization -->
     <administrator-role>
         <user>adminUser</user>
     </administrator-role>
 
-    <applicationMonitor pollingRate="0" updateTrigger="polled" dropinsEnabled="true"/>
-    
+    <applicationMonitor pollingRate="0" updateTrigger="polled" dropinsEnabled="true" />
+
     <!-- Adjust how frequently the server checks for changes to the server.xml file itself -->
-    <config monitorInterval="0" updateTrigger="polled"/>
+    <config monitorInterval="0" updateTrigger="polled" />
+    <!-- Instructs CDI to only process archives that explicitly contain a beans.xml file -->
+    <cdi12 enableImplicitBeanArchives="true" />
 </server>
