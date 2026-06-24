@@ -1308,8 +1308,6 @@
                <artifactId>liberty-maven-plugin</artifactId>
                <version>3.11.3</version> <!-- Use your current plugin version -->
                <configuration>
-                  <!-- Automatically sets scannable="false" for all your pom dependencies -->
-                  <scanLibs>false</scanLibs>
                </configuration>
             </plugin>
             <plugin>
