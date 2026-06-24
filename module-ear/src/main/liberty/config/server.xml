@@ -10,7 +10,7 @@
         <feature>beanValidation-1.1</feature>
         <feature>cdi-1.2</feature>
         <feature>concurrent-1.0</feature>
-        <feature>distributedMap-1.0</feature> <!-- DynaCache -->
+        <feature>distributedMap-1.0</feature>
         <feature>ejb-3.2</feature>
         <feature>ejbHome-3.2</feature>
         <feature>ejbLite-3.2</feature>
@@ -33,6 +33,7 @@
         <feature>jpa-2.1</feature>
         <feature>jpaContainer-2.1</feature>
         <feature>jsfContainer-2.2</feature>
+
         <feature>json-1.0</feature>
         <feature>jsonp-1.0</feature>
         <feature>jsp-2.3</feature>
@@ -56,11 +57,20 @@
         httpPort="9080"
         httpsPort="9443" />
 
-    <!-- Automatically expand WAR files and EAR files -->
-    <applicationManager autoExpand="false" />
+
+    <enterpriseApplication id="application-ear"
+        name="application-ear"
+        location="application-ear-1.0-SNAPSHOT.ear" />
+
 
     <!-- Default SSL configuration enables trust for default certificates from the Java runtime -->
     <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
+    <!-- Add this keystore element right here -->
+    <keyStore id="defaultKeyStore" password="changeit" />
+
+
+    <!-- Add this to explicitly set the LTPA password -->
+    <ltpa keysPassword="changeit" />
 
 
     <!-- Basic User Registry -->
@@ -73,10 +83,16 @@
         <user>adminUser</user>
     </administrator-role>
 
-    <applicationMonitor pollingRate="0" updateTrigger="polled" dropinsEnabled="true" />
+    <applicationMonitor updateTrigger="disabled" dropinsEnabled="false" />
 
-    <!-- Adjust how frequently the server checks for changes to the server.xml file itself -->
-    <config monitorInterval="0" updateTrigger="polled" />
-    <!-- Instructs CDI to only process archives that explicitly contain a beans.xml file -->
+    <config updateTrigger="disabled" />
     <cdi12 enableImplicitBeanArchives="true" />
+
+    <applicationManager autoExpand="false">
+        <!-- Exclude everything from heavy annotation scanning if you rely on web.xml/ejb-jar.xml
+        descriptors 
+    <annotationScanning exclude="*" /> -->
+    </applicationManager>
+
+
 </server>

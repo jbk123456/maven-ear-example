@@ -1,3 +1,3 @@
--Dsun.zip.disableMemoryMapping=false
--Djdk.util.zip.disableZip64ExtraFieldValidation=true
--Djdk.io.File.enableClassfileMapping=true
+#-Dsun.zip.disableMemoryMapping=false
+#-Djdk.util.zip.disableZip64ExtraFieldValidation=true
+#-Djdk.io.File.enableClassfileMapping=true
