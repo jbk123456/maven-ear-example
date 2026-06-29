@@ -1,3 +1,4 @@
 #-Dsun.zip.disableMemoryMapping=false
 #-Djdk.util.zip.disableZip64ExtraFieldValidation=true
 #-Djdk.io.File.enableClassfileMapping=true
+-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:7777

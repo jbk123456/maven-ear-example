@@ -6,7 +6,7 @@ Start with:
 
 ```bash
 mvn clean install
-mvn clean io.openliberty.tools:liberty-maven-plugin:3.11.3:run
+mvn cleassauuusdfZweitern io.openliberty.tools:liberty-maven-plugin:3.11.3:run
 ```
 
 Expected outcome:
