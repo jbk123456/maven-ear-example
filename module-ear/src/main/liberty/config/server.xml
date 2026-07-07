@@ -58,7 +58,7 @@
         httpsPort="9443" />
 
 
-    <enterpriseApplication id="application-ear"
+    <enterpriseApplication id="application-ear" updateTrigger="disabled" 
         name="application-ear"
         location="application-ear-1.0-SNAPSHOT.ear" />
 
@@ -66,7 +66,7 @@
     <!-- Default SSL configuration enables trust for default certificates from the Java runtime -->
     <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
     <!-- Add this keystore element right here -->
-    <keyStore id="defaultKeyStore" password="changeit" />
+    <keyStore updateTrigger="disabled" id="defaultKeyStore" password="changeit" />
 
 
     <!-- Add this to explicitly set the LTPA password -->
